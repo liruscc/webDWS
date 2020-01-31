@@ -145,10 +145,10 @@ class cliente {
     }
 
     //Imprimir cliente
-    public function __toString() {
-        return "<td>" . $this->getDni() . "</td><td>" . $this->getNombre() . "</td><td>" . $this->getDireccion() . "</td><td>"
-                . $this->getLocalidad() . "</td><td>" . $this->getProvincia() . "</td><td>" . $this->getTelefono() . "</td><td class='breaktext'>" . $this->getEmail();
-    }
+ //   public function __toString() {
+ //       return "<td>" . $this->getDni() . "</td><td>" . $this->getNombre() . "</td><td>" . $this->getDireccion() . "</td><td>"
+ //               . $this->getLocalidad() . "</td><td>" . $this->getProvincia() . "</td><td>" . $this->getTelefono() . "</td><td class='breaktext'>" . $this->getEmail();
+ //   }
 
     //Método para validar que un objeto cliente cumple los requisitos.
     public function validarClient($type = "nuevo") {
