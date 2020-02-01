@@ -28,8 +28,8 @@ function botonActivar($url,$string='') {
     echo "<a class='btn btn-success mr-1 pt-0' href='".$url."'><img with='15px' src='img/anadir.png'>".$string."</a>";
 }
 
-function botonAñadir($url,$string='') {
-    echo "<a class='btn btn-success mr-1 pt-0' href=".$url."'><img with='15px' src='img/anadir.png'>".$string."</a>";
+function botonAnadir($url,$string='') {
+    echo "<a class='btn btn-success mr-1 pt-0' href=".$url."><img with='15px' src='img/anadir.png'>".$string."</a>";
 }
 
 ?>
