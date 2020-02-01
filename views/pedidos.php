@@ -13,7 +13,7 @@ if (isset($_SESSION['tipo'])) {
         }
         echo '<div class="d-flex justify-content-between">';
         echo '<div class="m-1">Categorías de la tienda</div>';
-        botonAñadir("categoryForm.php?act=add", "Nueva");
+        botonAnadir("categoryForm.php?act=add", "Nueva");
         echo '</div>';
         if ($pedidos->getData()) {
             $datos = $pedidos->getData();

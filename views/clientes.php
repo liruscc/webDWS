@@ -22,6 +22,7 @@
             echo "<td>";
             echo botonEditar("editarcliente.php?dni=" . $datos[$i]->getDni());
             echo botonDesactivar("borrarcliente.php?dni=" . $datos[$i]->getDni());
+            echo botonInfo("borrarcliente.php?dni=" . $datos[$i]->getDni());
             echo "</td>";
             echo "</tr>";
         }
