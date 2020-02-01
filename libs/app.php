@@ -14,6 +14,7 @@ class app {
     }
     
     public function render(){
+       // print_r($this);
         require_once($this->controller->getArchivo());
         require_once($this->view->getArchivo());
     }

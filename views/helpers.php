@@ -29,7 +29,7 @@ function botonActivar($url,$string='') {
 }
 
 function botonAñadir($url,$string='') {
-    echo "<a class='btn btn-warning mr-1 pt-0' href='".$url."'><img with='15px' src='img/edit.png'>".$string."</a>";
+    echo "<a class='btn btn-success mr-1 pt-0' href=".$url."'><img with='15px' src='img/anadir.png'>".$string."</a>";
 }
 
 ?>

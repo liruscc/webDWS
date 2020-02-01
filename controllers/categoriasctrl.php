@@ -1,17 +1,17 @@
 <?php
 require_once('controllers/mainctrl.php');
-require_once('classes/cliente.php');
+require_once('classes/categoria.php');
 
-class clientesctrl extends mainctrl {
+class categoriasctrl extends mainctrl {
 
     function __construct() {
         parent::__construct();
     }
 
     function listar() {
-        $resultado = cliente::getClientes();
+        $resultado = categoria::getCategorias(false);
         if (!$resultado) {
-            parent::setErrores('No existen clientes para mostrar');
+            parent::setErrores('No existen categorías para mostrar');
         } else {
             parent::setData($resultado);
         }

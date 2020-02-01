@@ -3,7 +3,7 @@
     echo '<div class="col-lg-8 col-md-8 col-sm-8">';
     //LLamamos al método estático que lista todos los clientes
     $clientes = new clientesctrl();
-    $clientes->listarClientes();
+    $clientes->listar();
 
     //Si no hay ningún cliente lo mostramos en la tabla
     if ($clientes->getErrores()) {

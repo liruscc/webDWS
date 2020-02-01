@@ -35,12 +35,12 @@
 					echo '<li class="nav-item"><a class="nav-link" href="index.php">Ver pedidos</a></li>';
 				}
 				if($_SESSION['tipo']=='superusuario'){
-					echo '<li class="nav-item"><a class="nav-link" href="index.php">Gestionar empleados</a></li>';
+					echo '<li class="nav-item"><a class="nav-link" href="index.php?menu=clientes">Gestionar empleados</a></li>';
 				}
 				if($_SESSION['tipo']=='empleado' || $_SESSION['tipo']=='superusuario'){
-					echo '<li class="nav-item"><a class="nav-link" href="ordersdata.php">Gestionar pedidos</a></li>';
-					echo '<li class="nav-item"><a class="nav-link" href="productsdata.php">Gestionar artículos</a></li>';
-					echo '<li class="nav-item"><a class="nav-link" href="categoriesdata.php">Gestionar categorías</a></li>';
+					echo '<li class="nav-item"><a class="nav-link" href="index.php?menu=pedidos">Gestionar pedidos</a></li>';
+					echo '<li class="nav-item"><a class="nav-link" href="index.php?menu=articulos">Gestionar artículos</a></li>';
+					echo '<li class="nav-item"><a class="nav-link" href="index.php?menu=categorias">Gestionar categorías</a></li>';
 				}
 			?>
 		</ul>

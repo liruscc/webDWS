@@ -1,17 +1,17 @@
 <?php
 require_once('controllers/mainctrl.php');
-require_once('classes/cliente.php');
+require_once('classes/pedido.php');
 
-class clientesctrl extends mainctrl {
+class pedidosctrl extends mainctrl {
 
     function __construct() {
         parent::__construct();
     }
 
     function listar() {
-        $resultado = cliente::getClientes();
+        $resultado = pedido::getPedidos();
         if (!$resultado) {
-            parent::setErrores('No existen clientes para mostrar');
+            parent::setErrores('No existen pedidos para mostrar');
         } else {
             parent::setData($resultado);
         }
