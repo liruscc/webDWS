@@ -2,7 +2,7 @@
 require_once('controllers/mainctrl.php');
 require_once('classes/cliente.php');
 
-class clientctrl extends mainctrl {
+class clientesctrl extends mainctrl {
 
     function __construct() {
         parent::__construct();

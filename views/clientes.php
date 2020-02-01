@@ -1,13 +1,5 @@
 <?php
-require_once ('plantilla/header.php');
-require_once ('plantilla/nav.php');
-require_once('controllers/clientesctrl.php');
-require_once('views/helpers.php');
-?>
 
-<div id="container" class="d-flex flex-row col-lg-12 col-md-12 col-sm-12 justify-content-center">
-    <?php
-    require_once ('plantilla/leftmenu.php');
     echo '<div class="col-lg-8 col-md-8 col-sm-8">';
     //LLamamos al método estático que lista todos los clientes
     $clientes = new clientesctrl();
@@ -15,8 +7,9 @@ require_once('views/helpers.php');
 
     //Si no hay ningún cliente lo mostramos en la tabla
     if ($clientes->getErrores()) {
-        error('No existen clientes para mostrar');
+        error($clientes->getErrores());
     }
+
     if ($clientes->getData()) {
         $datos = $clientes->getData();
         echo "<table class='table'>";
@@ -36,11 +29,4 @@ require_once('views/helpers.php');
 
     echo "</table>";
     echo '</div>';
-
-    require_once ('plantilla/rightmenu.php');
-    ?>
-</div>
-
-<?php
-require_once ('plantilla/footer.php');
 ?>
