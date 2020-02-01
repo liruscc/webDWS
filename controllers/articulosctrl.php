@@ -16,6 +16,15 @@ class articulosctrl extends mainctrl {
             parent::setData($resultado);
         }
     }
+    
+    function getArticulo($id) {
+        $resultado = articulo::getArticulo($id);
+        if (!$resultado) {
+            parent::setErrores('No se pudo recuperar el artículo');
+        } else {
+            parent::setData($resultado);
+        }
+    }
 
 }
 

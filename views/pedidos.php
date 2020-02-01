@@ -36,11 +36,11 @@ if (isset($_SESSION['tipo'])) {
             }
             echo "</table>";
         }
-        echo '</div>';
     } else {
         echo '<h5>Acceso denegado</h5>';
     }
 } else {
     echo '<h5>Acceso denegado</h5>';
 }
+echo '</div>';
 ?>
