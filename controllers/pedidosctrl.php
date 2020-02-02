@@ -5,7 +5,7 @@ require_once('classes/pedido.php');
 class pedidosctrl extends mainctrl {
 
     function __construct() {
-        parent::__construct();
+        parent::__construct('Pedidos');
     }
 
     function listar() {

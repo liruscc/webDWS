@@ -12,6 +12,7 @@ if (isset($_SESSION['tipo'])) {
             error($articulos->getErrores());
         }
 
+        pageTitle($articulos->getNombre());
         if ($articulos->getData()) {
             $datos = $articulos->getData();
             echo "<table class='table'>";

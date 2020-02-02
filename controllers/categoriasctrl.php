@@ -5,7 +5,7 @@ require_once('classes/categoria.php');
 class categoriasctrl extends mainctrl {
 
     function __construct() {
-        parent::__construct();
+        parent::__construct('Categorías');
     }
 
     function listar() {

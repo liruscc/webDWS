@@ -5,7 +5,7 @@ require_once('classes/articulo.php');
 class articulosctrl extends mainctrl {
 
     function __construct() {
-        parent::__construct();
+        parent::__construct('Artículos');
     }
 
     function listar() {

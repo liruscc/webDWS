@@ -5,7 +5,7 @@ require_once('classes/cliente.php');
 class clientesctrl extends mainctrl {
 
     function __construct() {
-        parent::__construct();
+        parent::__construct('Clientes');
     }
 
     function listar() {

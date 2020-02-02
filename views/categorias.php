@@ -11,10 +11,8 @@ if (isset($_SESSION['tipo'])) {
         if ($categorias->getErrores()) {
             error($categorias->getErrores());
         }
-        echo '<div class="d-flex justify-content-between">';
-        echo '<div class="m-1">Categorías de la tienda</div>';
-        botonAnadir('categoryForm.php?act=add', "Nueva");
-        echo '</div>';
+        
+        pageTitle($categorias->getNombre());
         if ($categorias->getData()) {
             $datos = $categorias->getData();
             echo "<table class='table'>";

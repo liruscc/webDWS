@@ -32,4 +32,11 @@ function botonAnadir($url,$string='') {
     echo "<a class='btn btn-success mr-1 pt-0' href=".$url."><img with='15px' src='img/anadir.png'>".$string."</a>";
 }
 
+function pageTitle($title){
+    echo '<div class="d-flex justify-content-between">';
+    echo '<div class="m-1">'.$title.' de la tienda</div>';
+    botonAnadir('categoryForm.php?act=add', "Nueva");
+    echo '</div>';
+}
+
 ?>

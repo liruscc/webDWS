@@ -13,6 +13,7 @@ if (isset($_SESSION['tipo'])) {
             error($clientes->getErrores());
         }
 
+        pageTitle($clientes->getNombre());
         if ($clientes->getData()) {
             $datos = $clientes->getData();
             echo "<table class='table'>";
