@@ -12,7 +12,10 @@ if (isset($_SESSION['tipo'])) {
             error($articulos->getErrores());
         }
 
-        pageTitle($articulos->getNombre());
+        echo '<div class="d-flex justify-content-between">';
+        echo '<div class="m-1">' . $articulos->getNombre() . ' de la tienda</div>';
+        botonAnadir('categoryForm.php?act=add', " Nuevo");
+        echo '</div>';
         if ($articulos->getData()) {
             $datos = $articulos->getData();
             echo "<table class='table'>";
@@ -28,9 +31,8 @@ if (isset($_SESSION['tipo'])) {
                 echo "</tr>";
             }
             echo "</table>";
-           
         }
-         echo '</div>';
+        echo '</div>';
     } else {
         echo '<h5>Acceso denegado</h5>';
     }

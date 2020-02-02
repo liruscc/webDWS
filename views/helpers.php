@@ -12,31 +12,24 @@ function error($cadena) {
     echo "</div>";
 }
 
-function botonEditar($url,$string='') {
-    echo "<a class='btn btn-warning mr-1 pt-0' href='".$url."'><img with='15px' src='img/edit.png'>".$string."</a>";
+function botonEditar($url, $string = '') {
+    echo "<a class='btn btn-warning mr-1 pt-0' href='" . $url . "'><img with='15px' src='img/edit.png'>" . $string . "</a>";
 }
 
-function botonDesactivar($url,$string='') {
-    echo "<a class='btn btn-danger mr-1 pt-0' href='".$url."'><img with='15px' src='img/delete.png'>".$string."</a>";
+function botonDesactivar($url, $string = '') {
+    echo "<a class='btn btn-danger mr-1 pt-0' href='" . $url . "'><img with='15px' src='img/delete.png'>" . $string . "</a>";
 }
 
-function botonInfo($url,$string='') {
-    echo "<a class='btn btn-info mr-1 pt-0' href='".$url."'><img with='15px' src='img/info.png'>".$string."</a>";
+function botonInfo($url, $string = '') {
+    echo "<a class='btn btn-info mr-1 pt-0' href='" . $url . "'><img with='15px' src='img/info.png'>" . $string . "</a>";
 }
 
-function botonActivar($url,$string='') {
-    echo "<a class='btn btn-success mr-1 pt-0' href='".$url."'><img with='15px' src='img/anadir.png'>".$string."</a>";
+function botonActivar($url, $string = '') {
+    echo "<a class='btn btn-success mr-1 pt-0' href='" . $url . "'><img with='15px' src='img/anadir.png'>" . $string . "</a>";
 }
 
-function botonAnadir($url,$string='') {
-    echo "<a class='btn btn-success mr-1 pt-0' href=".$url."><img with='15px' src='img/anadir.png'>".$string."</a>";
-}
-
-function pageTitle($title){
-    echo '<div class="d-flex justify-content-between">';
-    echo '<div class="m-1">'.$title.' de la tienda</div>';
-    botonAnadir('categoryForm.php?act=add', "Nueva");
-    echo '</div>';
+function botonAnadir($url, $string = '') {
+    echo "<a class='btn btn-success mr-1 pt-0' href=" . $url . "><img with='15px' src='img/anadir.png'>" . $string . "</a>";
 }
 
 ?>

@@ -11,15 +11,18 @@ if (isset($_SESSION['tipo'])) {
         if ($categorias->getErrores()) {
             error($categorias->getErrores());
         }
-        
-        pageTitle($categorias->getNombre());
+
+        echo '<div class="d-flex justify-content-between">';
+        echo '<div class="m-1">' . $categorias->getNombre() . ' de la tienda</div>';
+        botonAnadir('categoryForm.php?act=add', " Nueva");
+        echo '</div>';
         if ($categorias->getData()) {
             $datos = $categorias->getData();
             echo "<table class='table'>";
             echo "<tr class='table-info'><td>Código categoria</td><td>Nombre</td><td>Activa</td></tr>";
             for ($i = 0; $i < count($categorias->getData()); $i++) {
                 echo "<tr>";
-                echo "<td>" . $datos[$i]->getCodigo() . "</td><td>" . $datos[$i]->getNombre() . "</td><td>" . $datos[$i]->getActivo() . "</td><td>"
+                echo "<td>" . $datos[$i]->getCodigo() . "</td><td>" . $datos[$i]->getNombre() . "</td><td>"
                 . $datos[$i]->getActivo() . "</td>";
                 echo "<td>";
                 if ($datos[$i]->getActivo()) {

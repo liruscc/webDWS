@@ -13,7 +13,10 @@ if (isset($_SESSION['tipo'])) {
             error($clientes->getErrores());
         }
 
-        pageTitle($clientes->getNombre());
+         echo '<div class="d-flex justify-content-between">';
+        echo '<div class="m-1">' . $clientes->getNombre() . ' de la tienda</div>';
+        botonAnadir('categoryForm.php?act=add', " Nuevo");
+        echo '</div>';
         if ($clientes->getData()) {
             $datos = $clientes->getData();
             echo "<table class='table'>";
