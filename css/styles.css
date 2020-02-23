@@ -47,18 +47,15 @@ a:hover{
     border-color: #8c8;
 }
 
+
 .btn-outline-primary{
-    color: white;
+    color: #007bff;
     background-color: #f8f9fa;
     border-color: #c1d1f0;
 }
 
-.btn-outline-primary{
-    color: white;
-    background-color: #f8f9fa;
-    border-color: #c1d1f0;
-}
 .btn-outline-primary:hover{
+    color: white;
     background-color: #c1d1f0;
 }
 

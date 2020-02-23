@@ -19,8 +19,15 @@ if (isset($_GET["error"])) {
     $error = $_GET["error"];
 }
 
-$consulta = articulo::imprimirArticulosPaginados($cat, $subcat, $numArticulos, $pag);
-$articulos = $consulta[0];
+if (!$_POST) {
+    $consulta = articulo::imprimirArticulosPaginados($cat, $subcat, $numArticulos, $pag);
+    $articulos = $consulta[0];
+}
+
+if ($_POST) {
+    $consulta = articulo::buscarArticulos($_POST['cadena']);
+    $articulos = $consulta[0];
+}
 ?>
 
 <div class = "col-lg-8 col-md-8 col-sm-8">
@@ -31,9 +38,9 @@ $articulos = $consulta[0];
         echo "</div>";
     }
     ?>	
-    <form class="form-inline md-form form-sm mt-1 mb-2">
-        <input class="form-control form-control-sm mr-3 w-50" type="text" placeholder="Search" aria-label="Search">
-        <a class='btn btn-outline-primary px-2 py-1'><i class="fas fa-search" aria-hidden="true"></i></a>
+    <form class="form-inline md-form form-sm mt-1 mb-2" method="post" action="<?php echo 'index.php' ?>">
+        <input class="form-control form-control-sm mr-3 w-50" name ="cadena" type="text" placeholder="Search" aria-label="Search"/>
+        <input class='btn btn-outline-primary px-2 py-1' type="submit" value="Buscar"/>
     </form>
 
     <div class = "resultado">
@@ -75,19 +82,21 @@ $articulos = $consulta[0];
     </div>
 
     <?php
-    if ($articulos && $consulta[1] > $numArticulos) {
-        $numPaginas = ceil($consulta[1] / $numArticulos);
-        $paginaAnterior = ($pag - 1 < 0) ? $pag : $pag - 1;
-        $paginaSiguiente = ($pag + 1 <= $numPaginas - 1) ? $pag + 1 : $pag;
-        echo '<nav>';
-        echo '<ul class="pagination justify-content-center">';
-        echo '<li class="page-item"><a class="page-link" ref="index.php?cat=' . $cat . '&subcat=' . $subcat . '&pag=' . $paginaAnterior . '""><</a></li>';
-        for ($i = 0; $i < $numPaginas; $i++) {
-            echo '<li class="page-item"><a class="page-link" href="index.php?cat=' . $cat . '&subcat=' . $subcat . '&pag=' . $i . '"">' . ($i + 1) . '</a></li>';
+    if (!$_POST) {
+        if ($articulos && $consulta[1] > $numArticulos) {
+            $numPaginas = ceil($consulta[1] / $numArticulos);
+            $paginaAnterior = ($pag - 1 < 0) ? $pag : $pag - 1;
+            $paginaSiguiente = ($pag + 1 <= $numPaginas - 1) ? $pag + 1 : $pag;
+            echo '<nav>';
+            echo '<ul class="pagination justify-content-center">';
+            echo '<li class="page-item"><a class="page-link" ref="index.php?cat=' . $cat . '&subcat=' . $subcat . '&pag=' . $paginaAnterior . '""><</a></li>';
+            for ($i = 0; $i < $numPaginas; $i++) {
+                echo '<li class="page-item"><a class="page-link" href="index.php?cat=' . $cat . '&subcat=' . $subcat . '&pag=' . $i . '"">' . ($i + 1) . '</a></li>';
+            }
+            echo '<li class="page-item"><a class="page-link" href="index.php?cat=' . $cat . '&subcat=' . $subcat . '&pag=' . $paginaSiguiente . '"">></a></li>';
+            echo '</ul>';
+            echo '</nav>';
         }
-        echo '<li class="page-item"><a class="page-link" href="index.php?cat=' . $cat . '&subcat=' . $subcat . '&pag=' . $paginaSiguiente . '"">></a></li>';
-        echo '</ul>';
-        echo '</nav>';
     }
     ?>
 </div>

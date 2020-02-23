@@ -103,28 +103,7 @@ class pedido {
             return false;
         }
     }
-    
-     public static function altaPedido2($dniCliente, $estado, $activo) {
-        $bbdd = connectBBDD();
-        try{
-        $query = 'INSERT INTO pedidos (dni_cliente,estado,activo, fecha_pedido) VALUES (:dni_cliente,:estado,:activo,NOW())';
-        $parametros = array(':dni_cliente' => $dniCliente, ':estado' => $estado,
-            ':activo' => $activo);
-        $bbdd->beginTransaction();
-        $stmt = $bbdd->prepare($query);
-        $stmt->execute($parametros);
-        $idpedido = $bbdd->lastInsertId();
-        $query2 = 'INSERT INTO linea_pedido VALUES (:num_linea,:cod_pedido,:cod_articulo,:unidades,:activo)';
-        $parametros2 = array(':num_linea' => '1', ':cod_pedido' => $idpedido,
-            ':cod_articulo' => '00001002', ':unidades' => '5', ':activo' => '1');
-        $stmt2 = $bbdd->prepare($query2);
-        $stmt2->execute($parametros2);
-        $bbdd->commit();
-        }catch(PDOException $exc){
-             $bbdd->rollBack();
-             return false;
-        }
-    }
+
 }
 
 ?>

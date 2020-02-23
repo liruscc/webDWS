@@ -157,20 +157,21 @@ class articulo {
         return $articulo === 1 ? true : false;
     }
 
-    public function buscarArticulos($cadena) {
+    public static function buscarArticulos($cadena) {
         $bbdd = connectBBDD();
-        $query = "SELECT cod_articulo FROM articulos WHERE descripcion LIKE=:cadena";
-        $parametros = array(':descripcion' => $cadena);
-        $articulos = executeQuery($bbdd, $query, 'articulo', $parametros);
+        $cadena = '%'.$cadena.'%';
+        $query = "SELECT * FROM articulos WHERE descripcion LIKE :cadena";
+        $parametros = array(':cadena' => $cadena);
+        $articulos = executeQuery($bbdd,'articulo',$query,$parametros);
         //Validamos que devuelve el resultado correcto
-        return count(($articulos) > 0) ? true : false;
+        return count($articulos) > 0 ? array($articulos, count($articulos)) : false;
     }
 
     public function addArticulo() {
         $bbdd = connectBBDD();
         $query = "INSERT INTO articulos VALUES (:cod_articulo, :descripcion, :precio, :promocion, :activo)";
         $parametros = array(':cod_articulo' => $this->cod_articulo, ':descripcion' => $this->descripcion, ':precio' => $this->precio, ':promocion' => $this->promocion, ':activo' => $this->activo);
-        $articulo = executeQuery($bbdd, $query, 'articulo', $parametros);
+        $articulo = executeQuery($bbdd,'articulo',$query, $parametros);
         //Validamos que devuelve el resultado correcto
         return $articulo === 1 ? true : false;
     }
