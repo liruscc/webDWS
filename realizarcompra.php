@@ -26,7 +26,7 @@ if (isset($_SESSION) && isset($_SESSION['tipo'])) {
 
 if ($_POST){
     //validar datos
-    $altapedido = pedido::altaPedido($_POST['dni'], 'pagado', '1');
+    $altapedido = pedido::altaPedido($_POST['dni'],$_POST['nombre'],$_POST['telefono'],$_POST['email'],$_POST['direccion'],$_POST['pago'],$_POST['envio'] );
     
     if ($altapedido) {
     $i = 1;
@@ -43,7 +43,7 @@ if ($altapedido && $altalineas) {
 }
 
     //Redirigimos a la tienda
-    header("Location: index.php");
+    //header("Location: index.php");
 }
 
 ?>
@@ -74,11 +74,7 @@ if (!$_SESSION) {
             </div>
             <div class="form-group">
                 <label for="direccion">Dirección:</label><br/>
-                <input type="direccion" id="direccion" name="direccion" size="60" maxlength="60"/><br/>
-                <label for="provincia">Provincia:</label><br/>
-                <input type="text" id="provincia" name="provincia" size="20" maxlength="10"/><br/>
-                <label for="localidad">Localidad:</label><br/>
-                <input type="text" id="localidad" name="localidad" size="20" maxlength="10"/><br/>
+                <input type="direccion" id="direccion" name="direccion" size="100" maxlength="120"/><br/>
             </div>
         </fieldset>
     <?php
@@ -103,11 +99,7 @@ if (!$_SESSION) {
         </div>
         <div class="form-group">
             <label for="direccion">Dirección:</label><br/>
-            <input class="form-control" type="direccion" id="direccion" name="direccion" size="60" maxlength="60" value ="<?php echo $usuario->getDireccion() ?>"/><br/>
-            <label for="provincia">Provincia:</label><br/>
-            <input class="form-control" type="text" id="provincia" name="provincia" size="20" maxlength="10" value ="<?php echo $usuario->getProvincia() ?>"/><br/>
-            <label for="localidad">Localidad:</label><br/>
-            <input class="form-control" type="text" id="localidad" name="localidad" size="20" maxlength="10" value ="<?php echo $usuario->getLocalidad() ?>"/><br/>
+            <input class="form-control" type="direccion" id="direccion" name="direccion" size="100" maxlength="120" value ="<?php echo $usuario->getDireccion().", ".$usuario->getProvincia().", ".$usuario->getLocalidad();?>"/><br/>
         </div>
     </fieldset>
     <?php
@@ -120,8 +112,8 @@ if (!$_SESSION) {
     <div class="form-group">
         <label for="pago">Tipo de pago:</label>
         <select name="pago">
-            <option value="01">Tarjeta de crédito</option> 
-            <option value="02">Transferencia</option>
+            <option value="tarjeta">Tarjeta de crédito</option> 
+            <option value="transferencia">Transferencia</option>
         </select>
     </div>
     <div class="form-group">	
@@ -131,9 +123,9 @@ if (!$_SESSION) {
     <div class="form-group">	
         <label for="envio">Tipo de envío:</label>
         <select name="envio">
-            <option value="01">Urgente 24h</option> 
-            <option value="02">Normal</option>
-            <option value="03">Recogida en tienda</option>
+            <option value="urgente">Urgente 24h</option> 
+            <option value="normal">Normal</option>
+            <option value="recogida">Recogida en tienda</option>
         </select>
     </div>
 </fieldset>

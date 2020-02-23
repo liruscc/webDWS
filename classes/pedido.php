@@ -8,14 +8,21 @@ class pedido {
 
     private $cod_pedido;
     private $dni_cliente;
+    private $nombre;
+    private $telefono;
+    private $email;
+    private $direccion;
     private $estado;
+    private $tipo_pago;
+    private $estado_pago;
+    private $envio;
     private $activo;
     private $fecha_pedido;
 
     //Constructor para la clase pedido. 
     //Este constructor permite que cuando PDO hace el fetch a la clase cree los objetos sin argumentos,
     //Y que además podamos instancias un objeto cliente de forma manual.
-    function __construct($cod_pedido = null, $dni_cliente = null, $estado = null, $activo = null, $fecha_pedido = null) {
+    function __construct($cod_pedido = null, $dni_cliente = null, $nombre = null, $telefono = null, $email = null, $direccion = null, $estado = null, $tipo_pago = null, $estado_pago = null, $envio = null, $activo = null, $fecha_pedido = null) {
         if ($cod_pedido !== null) {
             $this->cod_pedido = $cod_pedido;
         }
@@ -23,11 +30,39 @@ class pedido {
         if ($dni_cliente !== null) {
             $this->dni_cliente = $dni_cliente;
         }
+        
+        if ($nombre !== null) {
+            $this->nombre = $nombre;
+        }
+        
+        if ($telefono !== null) {
+            $this->telefono = $telefono;
+        }
+        
+        if ($email !== null) {
+            $this->email = $email;
+        }
+        
+        if ($direccion !== null) {
+            $this->direccion = $direccion;
+        }
 
         if ($estado !== null) {
             $this->estado = $estado;
         }
+        
+        if ($tipo_pago !== null) {
+            $this->tipo_pago = $tipo_pago;
+        }
+        
+        if ($estado_pago !== null) {
+            $this->estado_pago = $estado_pago;
+        }
 
+        if ($envio !== null) {
+            $this->envio = $envio;
+        }
+        
         if ($activo !== null) {
             $this->activo = $activo;
         }
@@ -45,11 +80,39 @@ class pedido {
     public function getDni() {
         return $this->dni_cliente;
     }
+    
+    public function getNombre() {
+        return $this->nombre;
+    }
+    
+    public function getTelefono() {
+        return $this->telefono;
+    }
+    
+    public function getEmail() {
+        return $this->email;
+    }
+    
+    public function getDireccion() {
+        return $this->direccion;
+    }
 
     public function getEstado() {
         return $this->estado;
     }
+    
+    public function getTipoPago() {
+        return $this->tipo_pago;
+    }
+    
+    public function getEstadoPago() {
+        return $this->estado_pago;
+    }
 
+    public function getEnvio() {
+        return $this->envio;
+    }
+    
     public function getActivo() {
         return $this->activo;
     }
@@ -66,11 +129,43 @@ class pedido {
     public function setDni($dni) {
         $this->dni_cliente = $dni_cliente;
     }
+    
+    public function setNombre($nombre) {
+        $this->nombre = $nombre;
+    }
+    
+    public function setTelefono($telefono) {
+        $this->telefono = $telefono;
+    }
+    
+    public function setEmail($email) {
+        $this->email = $email;
+    }
+    
+    public function setDireccion($direccion) {
+        $this->direccion = $direccion;
+    }
 
     public function setDescripcion($activo) {
         $this->activo = $activo;
     }
+    
+    public function setEstado($estado) {
+        $this->estado = $estado;
+    }
 
+    public function setTipoPago($tipo_pago) {
+        $this->tipo_pago = $tipo_pago;
+    }
+    
+    public function setEstadoPago($estado_pago) {
+        $this->tipo_pago = $estado_pago;
+    }
+    
+    public function setEnvio($envio) {
+        $this->tipo_pago = $envio;
+    }
+    
     //Imprimir categoría
     public function __toString() {
         return $this->getCodigo();
@@ -89,11 +184,14 @@ class pedido {
         }
     }
 
-    public static function altaPedido($dniCliente, $estado, $activo) {
+    public static function altaPedido($dniCliente, $nombre, $telefono, $email, $direccion, $tipo_pago, $envio) {
         $bbdd = connectBBDD();
-        $query = 'INSERT INTO pedidos (dni_cliente,estado,activo, fecha_pedido) VALUES (:dni_cliente,:estado,:activo,NOW())';
-        $parametros = array(':dni_cliente' => $dniCliente, ':estado' => $estado,
-            ':activo' => $activo);
+        $estado = 'pagado';
+        $estado_pago = 'confirmado';
+        $activo= '1';
+        $query = 'INSERT INTO pedidos (dni_cliente,nombre,telefono,email,direccion,estado,tipo_pago,estado_pago,envio,activo, fecha_pedido) VALUES (:dni_cliente,:nombre,:telefono,:email,:direccion,:estado,:tipo_pago,:estado_pago,:envio,:activo,NOW())';
+        $parametros = array(':dni_cliente' => $dniCliente, ':nombre'=>$nombre, ':telefono'=>$telefono, ':email'=>$email, ':direccion'=>$direccion, ':estado' => $estado,
+            ':tipo_pago'=>$tipo_pago, ':estado_pago'=>$estado_pago,':envio'=>$envio, ':activo' => $activo);
         $cliente = executeUpdate($bbdd, $query, $parametros);
         $idpedido = $bbdd->lastInsertId();
         //Validamos que devuelve el resultado correcto
