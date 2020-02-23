@@ -42,7 +42,7 @@
 			<a class="nav-link" href="">Envío</a>
 		</li>
 		<li class="nav-item col-lg-4 col-md-4">
-			<a href="views/carrito.php">
+			<a href="carrito.php">
 			<div class="d-flex flex-row justify-content-center">
 				<div class="p-2">
 					<img src="img/cart.png" height="30px">
