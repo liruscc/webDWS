@@ -183,6 +183,15 @@ class pedido {
             return false;
         }
     }
+    
+    //Método estático para recuperar todos productos de un usuario 
+    public static function getPedidosUsuario($dni) {
+        $bbdd = connectBBDD();
+        $query = 'SELECT * FROM pedidos WHERE dni_cliente=:dni';
+        $parametros = array (':dni'=>$dni);
+        $pedido = executeQuery($bbdd, 'pedido', $query,$parametros);
+        return (count($pedido) > 0) ? $pedido : false;
+    }
 
     public static function altaPedido($dniCliente, $nombre, $telefono, $email, $direccion, $tipo_pago, $envio) {
         $bbdd = connectBBDD();

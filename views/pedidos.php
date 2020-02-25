@@ -3,17 +3,22 @@
 echo '<div class="col-lg-8 col-md-8 col-sm-8">';
 if (isset($_SESSION['tipo'])) {
     if ($_SESSION['tipo'] == 'empleado' || $_SESSION['tipo'] == 'superusuario') {
-        //LLamamos al método estático que lista todos los $categorias
-
+        //LLamamos al método estático que lista todos los $pedidos
         $pedidos = new pedidosctrl();
         $pedidos->listar();
-        //Si no hay ningún articulo lo mostramos en la tabla
-        if ($pedidos->getErrores()) {
-            error($pedidos->getErrores());
-        }
+    }
+    if ($_SESSION['tipo'] == 'navegante' || $_SESSION['tipo'] == 'registrado') {
+        //LLamamos al método estático que lista todos los $pedidos
+        $pedidos = new pedidosctrl();
+        $pedidos->listarUsuario($_SESSION['id']);
+    }
+    //Si no hay ningún articulo lo mostramos en la tabla
+    if ($pedidos->getErrores()) {
+        error($pedidos->getErrores());
+    } else {
         echo '<div class="d-flex justify-content-between">';
         echo '<div class="m-1">' . $pedidos->getNombre() . ' de la tienda</div>';
-        botonAnadir('categoryForm.php?act=add', " Nuevo");
+        //botonAnadir('categoryForm.php?act=add', " Nuevo");
         echo '</div>';
         if ($pedidos->getData()) {
             $datos = $pedidos->getData();
@@ -36,8 +41,6 @@ if (isset($_SESSION['tipo'])) {
             }
             echo "</table>";
         }
-    } else {
-        echo '<h5>Acceso denegado</h5>';
     }
 } else {
     echo '<h5>Acceso denegado</h5>';

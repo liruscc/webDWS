@@ -1,4 +1,4 @@
-<div class = "col-lg-2 col-md-2 col-sm-2">
+ <div class = "col-lg-2 col-md-2 col-sm-2">
 <aside>
 <?php
 	if(!isset($_SESSION['id'])){
@@ -27,12 +27,9 @@
 	<nav class="navbar fixed-left">
 		<ul>
 			<?php
-				if($_SESSION['tipo']=='navegante'){
-					echo '<li class="nav-item"><a class="nav-link" href="index.php">Completar datos</a></li>';
-				}
-				if($_SESSION['tipo']=='registrado'){
+				if($_SESSION['tipo']=='registrado' || $_SESSION['tipo']=='navegante'){
 					echo '<li class="nav-item"><a class="nav-link" href="index.php">Editar datos</a></li>';
-					echo '<li class="nav-item"><a class="nav-link" href="index.php">Ver pedidos</a></li>';
+					echo '<li class="nav-item"><a class="nav-link" href="index.php?menu=pedidos">Ver pedidos</a></li>';
 				}
 				if($_SESSION['tipo']=='superusuario'){
 					echo '<li class="nav-item"><a class="nav-link" href="index.php?menu=clientes">Gestionar empleados</a></li>';

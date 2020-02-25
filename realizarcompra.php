@@ -8,22 +8,6 @@ $altapedido = false;
 $altalineas = false;
 $error = false;
 
-//Control sesión
-if (isset($_SESSION) && isset($_SESSION['tipo'])) {
-    $tipoUsuario = $_SESSION['tipo'];
-    if ($tipoUsuario == 'registrado') {
-        //header('Location: pago.php');
-    } elseif ($tipoUsuario == 'empleado') {
-        $error = 'Haga login con un usuario cliente finalizar su pedido.';
-    } elseif ($tipoUsuario == 'superusuario') {
-        $error = 'Haga login con un usuario cliente finalizar su pedido.';
-    } elseif ($tipoUsuario == 'navegante') {
-        //header('Location: completardatos.php');
-    }
-} else {
-    $error = 'Haga login con su usuario para finalizar su pedido.';
-}
-
 if ($_POST){
     //validar datos
     $altapedido = pedido::altaPedido($_POST['dni'],$_POST['nombre'],$_POST['telefono'],$_POST['email'],$_POST['direccion'],$_POST['pago'],$_POST['envio'] );
@@ -41,9 +25,8 @@ if ($altapedido && $altalineas) {
         setcookie("carrito[$ref]", "0", time() - 1);
     }
 }
-
     //Redirigimos a la tienda
-    //header("Location: index.php");
+    header("Location: index.php");
 }
 
 ?>

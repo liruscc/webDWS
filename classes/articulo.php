@@ -146,7 +146,7 @@ class articulo {
         $query = 'SELECT * FROM articulos';
         $articulo = executeQuery($bbdd, 'articulo', $query);
         return (count($articulo) > 0) ? $articulo : false;
-    }
+    }  
 
     public function updateArticulo() {
         $bbdd = connectBBDD();

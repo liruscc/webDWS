@@ -16,6 +16,15 @@ class pedidosctrl extends mainctrl {
             parent::setData($resultado);
         }
     }
+    
+     function listarUsuario($dni) {
+        $resultado = pedido::getPedidosUsuario($dni);
+        if (!$resultado) {
+            parent::setErrores('No existen pedidos para mostrar');
+        } else {
+            parent::setData($resultado);
+        }
+    }
 
 }
 
