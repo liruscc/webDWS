@@ -13,16 +13,16 @@ echo '<div class="col-lg-8 col-md-8 col-sm-8">';
 echo '<div class="col-lg-6 col-md-6 col-sm-6">';
 echo '<form id="producto" class="m-4" method="post" action="clientesForm.php">';
 
-if (isset($_SESSION)) {
-   // if($_SESSION['tipo']='navegante' || $_SESSION['tipo']='registrado'){
+if (isset($_SESSION['tipo'])) {
+    if($_SESSION['tipo']=='navegante' || $_SESSION['tipo']=='registrado'){
         $usuario = cliente::getClient($_SESSION['id']);
-   // }elseif($_SESSION['tipo']='superusuario' || $_SESSION['tipo']='empleado'){
-   //     $id = false;
-   //     if(isset($_GET['id'])){
-   //         $id = $_GET['id'];
-   //         $usuario = cliente::getClient($id);
-   //     }
-   // }
+    }elseif($_SESSION['tipo']=='superusuario' || $_SESSION['tipo']=='empleado'){
+        $dni = false;
+        if(isset($_GET['id'])){
+            $id = $_GET['id'];
+            $usuario = cliente::getClient($id);
+        }
+    }
     
     ?>
     <fieldset>

@@ -18,10 +18,11 @@
 	<a href='register.php'>Registrarse</a>
 <?php
 	}else{
+            $user = cliente::getClient($_SESSION['id']);
+            $nombre = $user->getNombre();
 ?>
 	<div class="d-flex flex-row no-wrap">
-		<div class="text"><?php echo "Bienvenid@ ".$_SESSION['id'];?></div>
-                <?php echo "Bienvenid@ ".$_SESSION['tipo'];?>
+		<div class="text"><?php echo "Bienvenid@ ".$nombre;?></div>
 		<div class="ml-3"><a class='btn btn-danger pt-0' href="autenticar.php?logout"><img with='15px' src='img/logout.png'></a></div>
 	</div>
 
