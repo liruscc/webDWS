@@ -68,7 +68,7 @@ if ($_POST) {
                         echo '<div><a class="btn btn-success" href="compra.php?ref=' . $value->getCodigo() . '&pre=' . $value->getPrecio() . '&cat=' . $cat . '&subcat=' . $subcat . '">Comprar</a></div>';
                     }
                     if ($_SESSION['tipo'] == 'superusuario' || $_SESSION['tipo'] == 'empleado') {
-                        echo '<div><a class="btn btn-warning pt-0" href="productForm.php?ref=' . $value->getCodigo() . '"><img width="15px" src="img/edit.png"></a></div>';
+                        echo '<a class="btn btn-warning pt-0" href="productForm.php?ref=' . $value->getCodigo() . '"><img width="15px" src="img/edit.png"></a>';
                         echo '<a class="btn btn-danger pt-0" href="productactions.php?ref=' . $value->getCodigo() . '&act=delete"><img width="15px" src="img/delete.png"></a></td>';
                     }
                 } else {

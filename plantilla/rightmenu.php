@@ -21,6 +21,7 @@
 ?>
 	<div class="d-flex flex-row no-wrap">
 		<div class="text"><?php echo "Bienvenid@ ".$_SESSION['id'];?></div>
+                <?php echo "Bienvenid@ ".$_SESSION['tipo'];?>
 		<div class="ml-3"><a class='btn btn-danger pt-0' href="autenticar.php?logout"><img with='15px' src='img/logout.png'></a></div>
 	</div>
 
@@ -28,7 +29,7 @@
 		<ul>
 			<?php
 				if($_SESSION['tipo']=='registrado' || $_SESSION['tipo']=='navegante'){
-					echo '<li class="nav-item"><a class="nav-link" href="index.php">Editar datos</a></li>';
+					echo '<li class="nav-item"><a class="nav-link" href="index.php?menu=clientesForm">Editar datos</a></li>';
 					echo '<li class="nav-item"><a class="nav-link" href="index.php?menu=pedidos">Ver pedidos</a></li>';
 				}
 				if($_SESSION['tipo']=='superusuario'){

@@ -7,6 +7,9 @@ class controller {
 
     function __construct($nombre) {
         $this->nombre = $nombre;
+        if(strpos($nombre,'Form')){
+            $nombre= substr($nombre,0, strpos($nombre, 'Form'));
+        }
         $this->archivo = 'controllers/' . $nombre . 'ctrl.php';
     }
 

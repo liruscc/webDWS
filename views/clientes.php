@@ -27,9 +27,9 @@ if (isset($_SESSION['tipo'])) {
                 . $datos[$i]->getLocalidad() . "</td><td>" . $datos[$i]->getProvincia() . "</td><td>" . $datos[$i]->getTelefono() . "</td><td class='breaktext'>" . $datos[$i]->getEmail();
                 //Pintamos los enlaces para editar y borrar el cliente pasando como parámetro el dni
                 echo "<td>";
-                echo botonEditar("editarcliente.php?dni=" . $datos[$i]->getDni());
-                echo botonDesactivar("borrarcliente.php?dni=" . $datos[$i]->getDni());
-                echo botonInfo("borrarcliente.php?dni=" . $datos[$i]->getDni());
+                echo botonEditar("index.php?menu=clientesForm.php&id=" . $datos[$i]->getDni());
+                echo botonDesactivar("index.php?menu=clientesForm.php&id=" . $datos[$i]->getDni());
+                echo botonInfo("index.php?menu=clientesForm.php&id=" . $datos[$i]->getDni());
                 echo "</td>";
                 echo "</tr>";
             }
