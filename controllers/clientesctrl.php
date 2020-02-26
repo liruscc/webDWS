@@ -8,10 +8,19 @@ class clientesctrl extends mainctrl {
         parent::__construct('Clientes');
     }
 
-    function listar() {
+    function listarClientes() {
         $resultado = cliente::getClientes();
         if (!$resultado) {
             parent::setErrores('No existen clientes para mostrar');
+        } else {
+            parent::setData($resultado);
+        }
+    }
+    
+    function listarEmpleados() {
+        $resultado = cliente::getEmpleados();
+        if (!$resultado) {
+            parent::setErrores('No existen empleados para mostrar');
         } else {
             parent::setData($resultado);
         }

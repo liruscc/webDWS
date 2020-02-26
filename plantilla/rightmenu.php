@@ -34,7 +34,7 @@
 					echo '<li class="nav-item"><a class="nav-link" href="index.php?menu=pedidos">Ver pedidos</a></li>';
 				}
 				if($_SESSION['tipo']=='superusuario'){
-					echo '<li class="nav-item"><a class="nav-link" href="index.php?menu=clientes">Gestionar empleados</a></li>';
+					echo '<li class="nav-item"><a class="nav-link" href="index.php?menu=clientes&empleados">Gestionar empleados</a></li>';
 				}
 				if($_SESSION['tipo']=='empleado' || $_SESSION['tipo']=='superusuario'){
 					echo '<li class="nav-item"><a class="nav-link" href="index.php?menu=pedidos">Gestionar pedidos</a></li>';

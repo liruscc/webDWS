@@ -6,16 +6,20 @@ if (isset($_SESSION['tipo'])) {
 
         //LLamamos al método estático que lista todos los clientes
         $clientes = new clientesctrl();
-        $clientes->listar();
-
+        
+        if($_SESSION['tipo'] == 'superusuario' && isset($_GET['empleados'])){
+            $clientes->listarEmpleados();
+        }else{
+            $clientes->listarClientes();
+        }
         //Si no hay ningún cliente lo mostramos en la tabla
         if ($clientes->getErrores()) {
             error($clientes->getErrores());
         }
 
-         echo '<div class="d-flex justify-content-between">';
+        echo '<div class="d-flex justify-content-between">';
         echo '<div class="m-1">' . $clientes->getNombre() . ' de la tienda</div>';
-        botonAnadir('categoryForm.php?act=add', " Nuevo");
+        //botonAnadir('categoryForm.php?act=add', " Nuevo");
         echo '</div>';
         if ($clientes->getData()) {
             $datos = $clientes->getData();
@@ -34,7 +38,6 @@ if (isset($_SESSION['tipo'])) {
                 echo "</tr>";
             }
         }
-
         echo "</table>";
     } else {
         echo '<h5>Acceso denegado</h5>';

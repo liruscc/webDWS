@@ -323,17 +323,18 @@ class cliente {
     //Método estático para recuperar todos cliente de la bbdd
     public static function getClientes() {
         $bbdd = connectBBDD();
-        $query = 'SELECT * FROM clientes';
-        $clientes = executeQuery($bbdd, 'cliente', $query);
-
+        $query = 'SELECT * FROM clientes WHERE tipo = :navegante OR tipo= :registrado';
+        $parametros = array(':navegante' => 'navegante',':registrado' => 'registrado');
+        $clientes = executeQuery($bbdd, 'cliente', $query, $parametros);
         return (count($clientes) > 0) ? $clientes : false;
     }
 
     //Método estático para recuperar todos cliente de la bbdd
     public static function getEmpleados() {
         $bbdd = connectBBDD();
-        $query = 'SELECT * FROM clientes WHERE tipo = empleado';
-        $clientes = executeQuery($bbdd, 'cliente', $query);
+        $query = 'SELECT * FROM clientes WHERE tipo = :empleado';
+        $parametros = array(':empleado' => 'empleado');
+        $clientes = executeQuery($bbdd, 'cliente', $query, $parametros);
 
         return (count($clientes) > 0) ? $clientes : false;
     }
