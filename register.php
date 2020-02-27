@@ -1,6 +1,7 @@
 <?php
 require_once ('plantilla/header.php');
 require_once ('plantilla/nav.php');
+require_once ('views/helpers.php' )
 ?>
 
 <div id = "container" class="d-flex flex-row col-lg-12 col-md-12 col-sm-12 justify-content-center">
@@ -21,7 +22,7 @@ require_once ('plantilla/nav.php');
                     echo "</div>";
                 } else {
                     if (cliente::altaCorta($_POST['dni'], $_POST['nombre'], $_POST['password'])) {
-                        header('Location: index.php');
+                        mensaje('Se ha realizado el alta correctamente. Haga login para iniciar sesión.');
                     }
                 }
             }
