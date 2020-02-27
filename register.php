@@ -17,7 +17,9 @@ require_once ('views/helpers.php' )
                 if ($errores) {
                     echo "<div id='errores' class='alert alert-danger p-1'>";
                     foreach ($errores as $key => $value) {
-                        echo $value . "<br/>";
+                        if($value){
+                            echo $value . "<br/>";
+                        }
                     }
                     echo "</div>";
                 } else {

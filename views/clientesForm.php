@@ -25,19 +25,23 @@ if ($_POST) {
         }
     }
 }
-echo '<div class="col-lg-6 col-md-6 col-sm-6">';
-echo '<form id="producto" class="m-4" method="post" action="index.php?menu=clientesForm">';
+
+
 
 if (isset($_SESSION['tipo'])) {
     if ($_SESSION['tipo'] == 'navegante' || $_SESSION['tipo'] == 'registrado') {
-        $usuario = cliente::getClient($_SESSION['id']);
+        $edit =$_SESSION['id'];
+        $usuario = cliente::getClient($edit);
     } elseif ($_SESSION['tipo'] == 'superusuario' || $_SESSION['tipo'] == 'empleado') {
-        $dni = false;
+        $edit = false;
         if (isset($_GET['id'])) {
-            $id = $_GET['id'];
-            $usuario = cliente::getClient($id);
+            $edit = $_GET['id'];
+            $usuario = cliente::getClient($edit);
         }
     }
+    $action = 'index.php?menu=clientesForm&id='.$edit;
+    echo '<div class="col-lg-6 col-md-6 col-sm-6">';
+    echo '<form id="producto" class="m-4" method="post" action="'.$action.'">';
     ?>
     <fieldset>
         <legend><em>Datos Usuario</em></legend>
