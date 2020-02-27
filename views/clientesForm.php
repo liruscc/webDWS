@@ -26,8 +26,6 @@ if ($_POST) {
     }
 }
 
-
-
 if (isset($_SESSION['tipo'])) {
     if ($_SESSION['tipo'] == 'navegante' || $_SESSION['tipo'] == 'registrado') {
         $edit =$_SESSION['id'];
@@ -39,8 +37,10 @@ if (isset($_SESSION['tipo'])) {
             $usuario = cliente::getClient($edit);
         }
     }
+    
     $action = 'index.php?menu=clientesForm&id='.$edit;
     echo '<div class="col-lg-6 col-md-6 col-sm-6">';
+    if($usuario){
     echo '<form id="producto" class="m-4" method="post" action="'.$action.'">';
     ?>
     <fieldset>
@@ -77,6 +77,9 @@ if (isset($_SESSION['tipo'])) {
     <input class="btn btn-danger" type="button" name="cancelar" value="Cancelar" onclick="location.href = 'index.php'"/>
     </form>
     <?php
+    }else{
+        echo "No se encontró el usuario";
+    }
 } else {
     echo "Acceso denegado";
 }

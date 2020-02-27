@@ -171,9 +171,9 @@ class articulo {
         $bbdd = connectBBDD();
         $query = "INSERT INTO articulos VALUES (:cod_articulo, :descripcion, :precio, :promocion, :activo)";
         $parametros = array(':cod_articulo' => $this->cod_articulo, ':descripcion' => $this->descripcion, ':precio' => $this->precio, ':promocion' => $this->promocion, ':activo' => $this->activo);
-        $articulo = executeQuery($bbdd,'articulo',$query, $parametros);
+        $articulo = executeUpdate($bbdd,$query,$parametros);
         //Validamos que devuelve el resultado correcto
-        return $articulo === 1 ? true : false;
+        return $articulo == 1 ? true : false;
     }
 
     public function cambiarEstado($estado) {
@@ -199,7 +199,7 @@ class articulo {
 
     public function validarArticulo() {
         $errores = Array();
-        if (self::validarCodigo($this->cod_articulo)) {
+        if (!self::existeCodigo($this->cod_articulo)) {
             $errores[] = "No se encontró el código del artículo.";
         }
         if (!self::validarDescripcion($this->descripcion)) {
@@ -219,8 +219,11 @@ class articulo {
 
     public function validarNuevoArticulo() {
         $errores = Array();
-        if (existeCodigo($this->cod_articulo)) {
-            $errores[] = "El código de artículo ya está en uso";
+        if (self::existeCodigo($this->cod_articulo)) {
+            $errores[] = "El código de artículo ya está en uso.";
+        }
+        if (!self::validarReferencia($this->cod_articulo)) {
+            $errores[] = "El código de referencia introducido no es válido. Soporta mínimo 1 caracter y máximo 9";
         }
         if (!self::validarDescripcion($this->descripcion)) {
             $errores[] = "La descripción es obligatoria y soporta un mínimo de 5 y un máximo de 40 carácteres.";
@@ -239,7 +242,12 @@ class articulo {
 
     public static function validarImagen($tipo_archivo, $tamano_archivo) {
         return !((strpos($tipo_archivo, "gif") || strpos($tipo_archivo, "jpeg") || strpos($tipo_archivo, "png")) && ($tamano_archivo < 200000)) ?
-                "El archivo debe ser de tipo [gif] [jpg] o [png] con un tamaño máximo de 200k" : false;
+                "El archivo debe ser de tipo [gif] [jpg] o [png] con un tamaño máximo de 200k." : false;
+    }
+    
+    public static function validarReferencia($referencia) {
+        return (strlen($referencia) < 10 && strlen($referencia) >0) ?
+                "La referencia asociada al artículo no es válida." : false;
     }
 
     public static function existeCodigo($codigo) {
