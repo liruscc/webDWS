@@ -210,14 +210,66 @@ class cliente {
     }
 
     public static function validarNombre($nombre) {
-        if (empty(trim($nombre))) {
-            $resultado = "El nombre es obligatorio.";
+        $len = 40;
+        if (empty(trim($nombre) || strlen($nombre)>$len)) {
+            $resultado = "El nombre es obligatorio y la longitud máxima es de ".$len." carácteres.";
         } else {
             $resultado = false;
         }
         return $resultado;
     }
-
+    
+    
+    public static function validarDireccion($direccion) {
+        $len = 120;
+        if (empty(trim($direccion) || strlen($direccion)>$len)) {
+            $resultado = "La dirección es obligatoria y la longitud máxima es de ".$len." carácteres.";
+        } else {
+            $resultado = false;
+        }
+        return $resultado;
+    }
+    
+    public static function validarLocalidad($localidad) {
+        $len = 30;
+        if (empty(trim($localidad) || strlen($localidad)>$len)) {
+            $resultado = "La localidad es obligatoria y la longitud máxima es de ".$len." carácteres.";
+        } else {
+            $resultado = false;
+        }
+        return $resultado;
+    }
+    
+    public static function validarProvincia($provincia) {
+        $len=40;
+        if (empty(trim($provincia) || strlen($provincia)>$len)) {
+            $resultado = "La provincia es obligatoria y la longitud máxima es de ".$len." carácteres.";
+        } else {
+            $resultado = false;
+        }
+        return $resultado;
+    }
+    
+    public static function validarTelefono($telefono) {
+        $telRegex = '/\d{9}/';
+        if (!preg_match($telRegex, $telefono)) {
+            $resultado = "El teléfono debe tener 9 dígitos.";
+        } else {
+            $resultado = false;
+        }
+        return $resultado;
+    }
+    
+    public static function validarEmail($email) {
+        $len = 30;
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            $resultado = "El email no es correcto. La longitud máxima es de ".$len." carácteres..";
+        } else {
+            $resultado = false;
+        }
+        return $resultado;
+    }
+    
     public static function validarPassword($password) {
         if (empty(trim($password))) {
             $resultado = "La contraseña es obligatoria.";
@@ -251,6 +303,21 @@ class cliente {
             return $validaciones;
         }
     }
+    
+    public function validarForm($dni, $nombre, $telefono, $email, $direccion, $localidad, $provincia) {
+        $validaciones = Array();
+        $validaciones['nombre'] = self::validarNombre($nombre);
+        $validaciones['email'] = self::validarEmail($email);
+        $validaciones['direccion'] = self::validarDireccion($direccion);
+        $validaciones['localidad'] = self::validarLocalidad($localidad);
+        $validaciones['provincia'] = self::validarProvincia($provincia);
+
+        if (!$validaciones['nombre'] && !$validaciones['email']&& !$validaciones['direccion']&& !$validaciones['localidad']&& !$validaciones['provincia']) {
+            return false;
+        } else {
+            return $validaciones;
+        }
+    }
 
     public function validarLogin($dni, $password) {
         $validaciones = Array();
@@ -274,7 +341,7 @@ class cliente {
         $parametros = array(':dni' => $dni, ':nombre' => $nombre, ':password' => $password, ':tipo' => $tipo);
         $cliente = executeUpdate($bbdd, $query, $parametros);
         //Validamos que devuelve el resultado correcto
-        return $articulo === 1 ? true : false;
+        return $cliente == 1 ? true : false;
     }
 
     //Método estático para añadir un nuevo cliente a la bbdd
@@ -286,7 +353,7 @@ class cliente {
         $cliente = executeUpdate($bbdd, $query, $parametros);
 
         //Validamos que devuelve el resultado correcto
-        return $articulo === 1 ? true : false;
+        return $cliente == 1 ? true : false;
     }
 
     //Método estático para borrar un cliente de la bbdd por su dni
@@ -297,18 +364,17 @@ class cliente {
         $cliente = executeUpdate($bbdd, $query, $parametros);
 
         //Validamos que devuelve el resultado correcto
-        return $articulo === 1 ? true : false;
+        return $cliente == 1 ? true : false;
     }
 
-    //Método estático para editar un cliente de la bbdd
-    public function editClient() {
+    //Método estático para editar un cliente con los valores de un formulario
+    public static function updateClient($dni, $nombre, $direccion, $localidad, $provincia, $telefono, $email) {
         $bbdd = connectBBDD();
         $query = "UPDATE clientes SET nombre=:nombre,direccion=:direccion,localidad=:localidad,provincia=:provincia,telefono=:telefono,email=:email WHERE dni=:dni";
-        $parametros = array(':nombre' => $this->nombre, ':direccion' => $this->direccion, ':localidad' => $this->localidad, ':provincia' => $this->provincia, ':telefono' => $this->telefono, ':email' => $this->email, ':dni' => $this->dni);
+        $parametros = array(':nombre' => $nombre, ':direccion' => $direccion, ':localidad' => $localidad, ':provincia' => $provincia, ':telefono' => $telefono, ':email' => $email, ':dni' => $dni);
         $cliente = executeUpdate($bbdd, $query, $parametros);
-
         //Validamos que devuelve el resultado correcto
-        return $articulo === 1 ? true : false;
+        return $cliente == 1 ? true : false;
     }
 
     //Método estático para recuperar un cliente de la bbdd
