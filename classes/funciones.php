@@ -1,12 +1,12 @@
 <?php
-
+require_once 'config.php';
 //Función para conectar con la BBDD
 function connectBBDD() {
-    $host = 'localhost';
-    $db = 'clientes_db';
-    $user = 'jefe';
-    $pass = 'jefe';
-
+    global $host;
+    global $db;
+    global $user;
+    global $pass;
+    
     try {
         $conexion = new PDO('mysql:host=' . $host . ';dbname=' . $db . ";charset=utf8", $user, $pass);
         $conexion->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
