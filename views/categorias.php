@@ -14,7 +14,7 @@ if (isset($_SESSION['tipo'])) {
 
         echo '<div class="d-flex justify-content-between">';
         echo '<div class="m-1">' . $categorias->getNombre() . ' de la tienda</div>';
-        botonAnadir('categoryForm.php?act=add', " Nueva");
+        botonAnadir('categoryForm.php?accion=add', " Nueva");
         echo '</div>';
         if ($categorias->getData()) {
             $datos = $categorias->getData();
@@ -26,11 +26,11 @@ if (isset($_SESSION['tipo'])) {
                 . $datos[$i]->getActivo() . "</td>";
                 echo "<td>";
                 if ($datos[$i]->getActivo()) {
-                    botonDesactivar("categoryForm.php?cod=" . $datos[$i]->getCodigo() . "&act=deactivate");
+                    botonDesactivar("categoryForm.php?cod=" . $datos[$i]->getCodigo() . "&accion=deactivate");
                 } else {
-                    botonActivar("categoryForm.php?cod=" . $datos[$i]->getCodigo() . "&act=activate");
+                    botonActivar("categoryForm.php?cod=" . $datos[$i]->getCodigo() . "&accion=activate");
                 }
-                botonEditar("categoryForm.php?cod=" . $datos[$i]->getCodigo() . "&act=update");
+                botonEditar("categoryForm.php?cod=" . $datos[$i]->getCodigo() . "&accion=update");
 
                 botonInfo("categoryForm.php?cod=" . $datos[$i]->getCodigo());
                 echo "</tr>";

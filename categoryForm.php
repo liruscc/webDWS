@@ -14,13 +14,18 @@ require_once ('plantilla/nav.php');
     if (isset($_SESSION['tipo'])) {
         if ($_SESSION['tipo'] == 'empleado' || $_SESSION['tipo'] == 'superusuario') {
 
-            if (isset($_GET["act"])) {
-                $accion = $_GET["act"];
+            if (isset($_GET["accion"])) {
+                $accion = $_GET["accion"];
+                if($accion=='add'){
+                    $name='Añadir';
+                }elseif($accion=='update' || $accion=='activate' || $accion=='deactivate'){
+                    $name='Actualizar';
+                }
             }
 
             if ($_POST) {
-                if (isset($_POST["act"])) {
-                    $accion = $_POST["act"];
+                if (isset($_POST["accion"])) {
+                    $accion = $_POST["accion"];
                 }
 
                 if (isset($_POST["cod"])) {
@@ -106,16 +111,18 @@ require_once ('plantilla/nav.php');
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb bg-light py-1">
                         <li class="breadcrumb-item"><a href="categoriesdata.php">Categorías</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">Editar categoría</li>
+                        <li class="breadcrumb-item active" aria-current="page"><?php echo $name.' categoría'?></li>
                     </ol>
                 </nav>
             </div>
             <div class="col-lg-5 col-md-5 col-sm-5">
-                <form id="producto" class='m-4' method="post" action="categoryForm.php">	
+                <form id="producto" class='m-4' method="post" action="categoryForm.php?accion=<?php echo $accion?>">
+                    <?php if($accion=='update'){?>
                     <div class="form-group">	
                         <label for="codigo">Código:</label>
                         <input type="text" class='form-control' name="codigo" id="codigo" value="<?php echo $categoria->getCodigo(); ?>" size="40" readonly="readonly"/><br/>
                     </div>
+                    <?php }?>
                     <div class="form-group">	
                         <label for="nombre">Nombre:</label>
                         <input type="text" class='form-control' name="nombre" id="descripcion" value="<?php echo $categoria->getNombre(); ?>" size="40"/><br/>
@@ -125,20 +132,20 @@ require_once ('plantilla/nav.php');
                     echo '<div clas"row">';
                     echo "<div>";
                     if ($categoria->getActivo()) {
-                        echo "Desactivar categoría <a class='btn btn-danger mr-1 pt-0' href='categoryForm.php?cod=" . $categoria->getCodigo() . "&act=deactivate'><img with='15px' src='img/delete.png'></a>";
+                        echo "Desactivar categoría <a class='btn btn-danger mr-1 pt-0' href='categoryForm.php?cod=" . $categoria->getCodigo() . "&accion=deactivate'><img with='15px' src='img/delete.png'></a>";
                     } else {
-                        echo "Activar categoría <a class='btn btn-success mr-1 pt-0' href='categoryForm.php?cod=" . $categoria->getCodigo() . "&act=activate'><img with='15px' src='img/anadir.png'></a>";
+                        echo "Activar categoría <a class='btn btn-success mr-1 pt-0' href='categoryForm.php?cod=" . $categoria->getCodigo() . "&accion=activate'><img with='15px' src='img/anadir.png'></a>";
                     }
                     echo "</div>";
                     echo "</div>";
                     ?>
                     <input type="hidden" class='form-control' name="activo" id="activo" value="<?php echo $categoria->getActivo(); ?>"/><br/>
                     <input type="hidden" class='form-control' name="cod" id="cod" value ="<?php echo $categoria->getCodigo(); ?>"/><br/>
-                    <input type="hidden" class='form-control' name="act" id="act" value ="<?php echo $accion ?>"/><br/>
+                    <input type="hidden" class='form-control' name="accion" id="accion" value ="<?php echo $accion ?>"/><br/>
 
                     <br/>
                     <input class="btn btn-success" type="submit" name="guardar" value="Guardar"/>
-                    <input class="btn btn-danger" type="button" name="cancelar" value="Cancelar" onclick="location.href = 'categoriesdata.php'"/>
+                    <input class="btn btn-danger" type="button" name="cancelar" value="Cancelar" onclick="location.href = 'index.php?menu=categorias'"/>
                 </form>
             </div>
             <div class="col-lg-7 col-md-7 col-sm-7">
@@ -159,9 +166,9 @@ require_once ('plantilla/nav.php');
                         //Pintamos los enlaces para editar y borrar el cliente pasando como parámetro el dni
                         echo "<td><a class='btn btn-warning mr-1 pt-0' href='sucategoryForm.php?cod=" . $value->getCodigo() . "'><img with='15px' src='img/edit.png'></a>";
                         if ($value->getActivo()) {
-                            echo "<a class='btn btn-danger mr-1 pt-0' href='subcategoryForm.php?cod=" . $value->getCodigo() . "&act=deactivate'><img with='15px' src='img/delete.png'></a>";
+                            echo "<a class='btn btn-danger mr-1 pt-0' href='subcategoryForm.php?cod=" . $value->getCodigo() . "&accion=deactivate'><img with='15px' src='img/delete.png'></a>";
                         } else {
-                            echo "<a class='btn btn-success mr-1 pt-0' href='subcategoryForm.php?cod=" . $value->getCodigo() . "&act=activate'><img with='15px' src='img/anadir.png'></a>";
+                            echo "<a class='btn btn-success mr-1 pt-0' href='subcategoryForm.php?cod=" . $value->getCodigo() . "&accion=activate'><img with='15px' src='img/anadir.png'></a>";
                         }
                         echo "<a class='btn btn-info pt-0' href='subcategoryForm.php?cod=" . $value->getCodigo() . "'><img with='15px' src='img/info.png'></a></td>";
                         echo "</tr>";
