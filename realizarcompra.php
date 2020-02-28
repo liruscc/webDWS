@@ -1,4 +1,5 @@
 <?php
+ob_start();
 require_once('classes/pedido.php');
 require_once('classes/lineapedido.php');
 require_once ('plantilla/header.php');
