@@ -2,6 +2,7 @@
 
 //Añadimos la librería funciones.php
 require_once("funciones.php");
+require_once("classes/cliente.php");
 
 //Creamos la clase categoria con los mismos parámetros en el la tabla pedidos de la bbdd
 class pedido {
@@ -170,13 +171,25 @@ class pedido {
     public function __toString() {
         return $this->getCodigo();
     }
+    
+    //Método estático para recuperar un pedido por id de la bbdd 
+    public static function getPedido($id) {
+        $bbdd = connectBBDD();
+        $query = 'SELECT * FROM pedidos WHERE cod_pedido=:cod_pedido';
+        $parametros = array('cod_pedido'=>$id);
+        $pedidos = executeQuery($bbdd, 'pedido', $query, $parametros);
+        if (count($pedidos) > 0) {
+            return $pedidos[0];
+        } else {
+            return false;
+        }
+    }
 
     //Método estático para recuperar todos los pedidos de la bbdd 
     public static function getPedidos() {
         $bbdd = connectBBDD();
         $query = 'SELECT * FROM pedidos';
         $pedidos = executeQuery($bbdd, 'pedido', $query);
-
         if (count($pedidos) > 0) {
             return $pedidos;
         } else {
@@ -185,7 +198,7 @@ class pedido {
     }
     
     //Método estático para recuperar todos productos de un usuario 
-    public static function getPedidosUsuario($dni) {
+     public static function getPedidosUsuario($dni) {
         $bbdd = connectBBDD();
         $query = 'SELECT * FROM pedidos WHERE dni_cliente=:dni';
         $parametros = array (':dni'=>$dni);
@@ -210,7 +223,136 @@ class pedido {
             return false;
         }
     }
+    
+    public static function updatePedido($cod_pedido, $dni_cliente, $nombre, $telefono, $email, $direccion, $estado, $tipo_pago, $estado_pago, $envio, $activo) {
+        $bbdd = connectBBDD();
+        $query = "UPDATE pedidos SET dni_cliente=:dni_cliente,nombre=:nombre,telefono=:telefono,email=:email,direccion=:direccion,estado=:estado,tipo_pago=:tipo_pago,estado_pago=:estado_pago,envio=:envio,activo=:activo WHERE cod_pedido=:cod_pedido";
+        $parametros = array(':cod_pedido' =>$cod_pedido, ':dni_cliente' =>$dni_cliente, ':nombre' =>$nombre, ':telefono' =>$telefono, ':email'=> $email,':direccion'=>$direccion,':estado'=>$estado,':tipo_pago'=>$tipo_pago,':estado_pago'=>$estado_pago,':envio'=>$envio,':activo'=>$activo);
+        $articulo = executeUpdate($bbdd, $query, $parametros);
+        //Validamos que devuelve el resultado correcto
+        return $articulo == 1 ? true : false;
+    }
+    
+    public static function validarDni($dni) {
+        //Expresión regular para validar el DNI.
+        $dniRegex = '/\d{8}[a-zA-Z]$/';
+        //Validamos si el formato del dni es correcto.
+        if (!preg_match($dniRegex, $dni)) {
+            //Si no es agregamos el mensaje de error al array asociativo. Se hace igual en el reto de validaciones.
+            $resultado = "El formato del dni no es correcto.";
+        } else {
+            $resultado = false;
+        }
+        return $resultado;
+    }
+    
+    public static function validarTelefono($telefono) {
+        $telRegex = '/\d{9}/';
+        if (!preg_match($telRegex, $telefono)) {
+            $resultado = "El teléfono debe tener 9 dígitos.";
+        } else {
+            $resultado = false;
+        }
+        return $resultado;
+    }
+    
+    public static function validarEmail($email) {
+        $len = 30;
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            $resultado = "El email no es correcto. La longitud máxima es de ".$len." carácteres..";
+        } else {
+            $resultado = false;
+        }
+        return $resultado;
+    }
+    
+     public static function validarNombre($nombre) {
+        $len = 30;
+        if (empty(trim($nombre) || strlen($nombre)>$len)) {
+            $resultado = "El nombre es obligatorio y la longitud máxima es de ".$len." carácteres.";
+        } else {
+            $resultado = false;
+        }
+        return $resultado;
+    }
+    
+    public static function validarDireccion($direccion) {
+        $len = 180;
+        if (empty(trim($direccion) || strlen($direccion)>$len)) {
+            $resultado = "La dirección es obligatoria y la longitud máxima es de ".$len." carácteres.";
+        } else {
+            $resultado = false;
+        }
+        return $resultado;
+    }
+    
+    
+    public static function validarEstado($estado) {
+        if ( empty(trim($estado)) || ($estado != 'pagado' && $estado != 'en preparación' && $estado != 'enviado' && $estado != 'entregado'  && $estado != 'cancelado')) {
+            $resultado = "El estado es obligatorio. ['pagado','en preparación','enviado','entregado','cancelado']";
+        } else {
+            $resultado = false;
+        }
+        return $resultado;
+    }
+    
+    public static function validarTipoPago($tipo_pago) {
+        if ( empty(trim($tipo_pago)) || ($tipo_pago != 'tarjeta' && $tipo_pago != 'transferencia')) {
+            $resultado = "El tipo de pago es obligatorio. ['tarjeta','transferencia']";
+        } else {
+            $resultado = false;
+        }
+        return $resultado;
+    }
+    
+    public static function validarEstadoPago($estado_pago) {
+        if ( empty(trim($estado_pago)) || ($estado_pago != 'pendiente' && $estado_pago != 'confirmado')) {
+            $resultado = "El estado del pago es obligatorio. ['pendiente','confirmado']";
+        } else {
+            $resultado = false;
+        }
+        return $resultado;
+    }
+    
+    public static function validarEnvio($envio) {
+        if ( empty(trim($envio)) || ($envio != 'urgente' && $envio != 'normal' && $envio != 'recogida')) {
+            $resultado = "El tipo de envío es obligatorio. ['urgente','normal','recogida']";
+        } else {
+            $resultado = false;
+        }
+        return $resultado;
+    }
 
+     public static function validarActivo($activo) {
+        $actRegex = '/[0-1]$/';
+        if (!preg_match($actRegex, $activo)) {
+            $resultado = "El campo Activo admite valor '0' o '1'.";
+        } else {
+            $resultado = false;
+        }
+        return $resultado;
+    }
+    
+    public function validarForm($dni_cliente, $nombre, $telefono, $email, $direccion, $estado, $tipo_pago,$estado_pago,$envio,$activo) {
+        $validaciones = Array();
+        $validaciones['dni_cliente'] = self::validarDni($dni_cliente);;
+        $validaciones['nombre'] = self::validarNombre($nombre);
+        $validaciones['telefono'] = self::validarTelefono($telefono);
+        $validaciones['email'] = self::validarEmail($email);
+        $validaciones['direccion'] = self::validarDireccion($direccion);
+        $validaciones['estado'] = self::validarEstado($estado);
+        $validaciones['tipo_pago'] = self::validarTipoPago($tipo_pago);
+        $validaciones['estado_pago'] = self::validarEstadoPago($estado_pago);
+        $validaciones['envio'] = self::validarEnvio($envio);
+         $validaciones['activo'] = self::validarActivo($activo);
+       
+        if (!$validaciones['dni_cliente'] && !$validaciones['nombre'] && !$validaciones['telefono'] && !$validaciones['email']&& !$validaciones['direccion']&& 
+                !$validaciones['estado'] && !$validaciones['tipo_pago'] && !$validaciones['estado_pago'] && !$validaciones['envio'] && !$validaciones['activo'] ) {
+            return false;
+        } else {
+            return $validaciones;
+        }
+    }
 }
 
 ?>

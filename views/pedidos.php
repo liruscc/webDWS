@@ -30,13 +30,13 @@ if (isset($_SESSION['tipo'])) {
                 . $datos[$i]->getActivo() . "</td>";
                 echo "<td>";
                 if ($datos[$i]->getActivo()) {
-                    botonDesactivar("orderForm.php?cod=" . $datos[$i]->getCodigo() . "&act=deactivate");
+                    botonDesactivar("index.php?menu=pedidosForm&id=" . $datos[$i]->getCodigo() . "&act=deactivate");
                 } else {
-                    botonActivar("orderForm.php?cod=" . $datos[$i]->getCodigo() . "&act=activate");
+                    botonActivar("index.php?menu=pedidosForm&id=" . $datos[$i]->getCodigo() . "&act=activate");
                 }
-                botonEditar("orderForm.php?cod=" . $datos[$i]->getCodigo() . "&act=update");
+                botonEditar("index.php?menu=pedidosForm&id=" . $datos[$i]->getCodigo() . "&act=update");
 
-                botonInfo("orderForm.php?cod=" . $datos[$i]->getCodigo());
+                botonInfo("index.php?menu=pedidosForm&id=" . $datos[$i]->getCodigo());
                 echo "</tr>";
             }
             echo "</table>";

@@ -86,10 +86,11 @@ class lineapedido {
     }
 
     //Método estático para recuperar todas las líneas de un pedido 
-    public static function getPedido($codpedido) {
+    public static function getPedido($cod_pedido) {
         $bbdd = connectBBDD();
-        $query = 'SELECT * FROM linea_pedido';
-        $pedidos = executeQuery($bbdd, 'lineapedido', $query);
+        $query = 'SELECT * FROM linea_pedido WHERE cod_pedido=:cod_pedido';
+        $parametros = array(':cod_pedido'=>$cod_pedido);
+        $pedidos = executeQuery($bbdd, 'lineapedido', $query, $parametros);
 
         if (count($pedidos) > 0) {
             return $pedidos;

@@ -1,0 +1,145 @@
+<?php
+require_once ('views/helpers.php');
+require_once ('classes/lineapedido.php');
+require_once ('classes/articulo.php');
+$error = false;
+$pedido = false;
+?>
+
+<?php
+echo '<div class="col-lg-8 col-md-8 col-sm-8 row">';
+if ($_POST) {
+    //validar cliente y error o actualizar (llamar al controlador)
+    $errores = pedido::validarForm($_POST['dni'], $_POST['nombre'], $_POST['telefono'], $_POST['email'], $_POST['direccion'], $_POST['estado'], $_POST['tipo_pago'], $_POST['estado_pago'], $_POST['envio'], $_POST['activo']);
+    //Por cada error devuelto lo imprimos en la parte superior de la página
+    if ($errores) {
+        echo "<div id='errores' class='alert alert-danger p-1'>";
+        foreach ($errores as $key => $value) {
+            if ($value) {
+                echo $value . "<br/>";
+            }
+        }
+        echo "</div>";
+    } else {
+        if (pedido::updatePedido($_GET['id'], $_POST['dni'], $_POST['nombre'], $_POST['telefono'], $_POST['email'], $_POST['direccion'], $_POST['estado'], $_POST['tipo_pago'], $_POST['estado_pago'], $_POST['envio'],$_POST['activo'])) {
+            mensaje('El pedido se actualizó correctamente.');
+        } else {
+            error('No se pudo actualizar el pedido.');
+        }
+    }
+}
+
+if (isset($_SESSION['tipo'])) {
+    if ($_SESSION['tipo'] == 'navegante' || $_SESSION['tipo'] == 'registrado') {
+        $edit = $_GET['id'];
+        $pedido = pedido::getPedido($edit);
+        if (!$pedido) {
+            $pedido = false;
+        } else {
+            $pedido = pedido::getPedido($edit);
+            if ($pedido->getDni() == $_SESSION['id']) {
+                $pedido = pedido::getPedido($edit);
+            } else {
+                $pedido = false;
+            }
+        }
+    } elseif ($_SESSION['tipo'] == 'superusuario' || $_SESSION['tipo'] == 'empleado') {
+        $edit = false;
+        if (isset($_GET['id'])) {
+            $edit = $_GET['id'];
+            $pedido = pedido::getPedido($edit);
+        }
+    }
+
+    $action = 'index.php?menu=pedidosForm&id=' . $edit;
+    if ($pedido) {
+        echo '<div class="col-lg-6 col-md-6 col-sm-6">';
+        echo '<form id="producto" class="m-4" method="post" action="' . $action . '">';
+        ?>
+
+        <fieldset>
+            <legend><em>Datos Pedido</em></legend>
+            <div class="form-group">
+                <label for="fecha">Fecha pedido:</label><br/>
+                <input class="form-control" type="text" id="dni" name="fecha" size="10" maxlength="9" value ="<?php echo $pedido->getFecha(); ?>" readonly="readonly"/>
+            </div>
+            <div class="form-group">
+                <label for="dni">Dni:</label><br/>
+                <input class="form-control" type="text" id="dni" name="dni" size="10" maxlength="9" value ="<?php echo $pedido->getDni(); ?>"/>
+            </div>
+            <div class="form-group">
+                <label for="nombre">Nombre completo:</label><br/>	
+                <input class="form-control" type="text" id="nombre" name="nombre" size="40" maxlength="40" value ="<?php echo $pedido->getNombre(); ?>"/>
+            </div>
+            <div class="form-group">
+                <label for="nombre">Teléfono:</label><br/>	
+                <input class="form-control" type="text" id="nombre" name="telefono" size="10" maxlength="9" value ="<?php echo $pedido->getTelefono(); ?>"/>
+                <label for="nombre">Email:</label><br/>	
+                <input class="form-control" type="text" id="email" name="email" size="20" maxlength="30" value ="<?php echo $pedido->getEmail(); ?>"/>
+            </div>
+            <div class="form-group">
+                <label for="direccion">Dirección:</label><br/>
+                <input class="form-control" type="direccion" id="direccion" name="direccion" size="100" maxlength="120" value ="<?php echo $pedido->getDireccion(); ?>"/>
+            </div>
+            <div class="form-group">
+                <label for="estado">Estado:</label><br/>
+                <input class="form-control" type="text" id="estado" name="estado" size="30" maxlength="30" value="<?php echo $pedido->getEstado(); ?>"/>
+            </div>
+            <div class="form-group">
+                <label for="tipo_pago">Tipo de pago:</label><br/>
+                <input class="form-control" type="text" id="tipo_pago" name="tipo_pago" size="30" maxlength="30" value="<?php echo $pedido->getTipoPago(); ?>"/>
+            </div>
+            <div class="form-group">
+                <label for="estado_pago">Estado del pago:</label><br/>
+                <input class="form-control" type="text" id="estado_pago" name="estado_pago" size="30" maxlength="30" value="<?php echo $pedido->getEstadoPago(); ?>"/>
+            </div>
+            <div class="form-group">
+                <label for="envio">Tipo de envío:</label><br/>
+                <input class="form-control" type="text" id="envio" name="envio" size="30" maxlength="30" value="<?php echo $pedido->getEnvio(); ?>"/>
+            </div>
+            <div class="form-group">
+                <label for="activo">Activo:</label><br/>
+                <input class="form-control" type="text" id="activo" name="activo" size="30" maxlength="30" value="<?php echo $pedido->getActivo(); ?>"/>
+            </div>  
+        </fieldset>
+        <br/>
+        <input class="btn btn-success" type="submit" name="confirmar" value="Guardar"/>
+        <input class="btn btn-danger" type="button" name="cancelar" value="Cancelar" onclick="location.href = 'index.php'"/>
+        </form>
+        <?php
+        echo '</div>';
+        echo '<div class="col-lg-6 col-md-6 col-sm-6">';
+        $lineasPedido = lineapedido::getPedido($pedido->getCodigo());
+        echo "<table class='table mt-5'>";
+        echo "<tr class='table-info'><td>Artículo</td><td>Unidades</td><td class='w-50'></td></tr>";
+        //Si no hay ningún cliente lo mostramos en la tabla
+        if (!$lineasPedido) {
+            echo "<td colspan='4'><b>No existen subcategorías asociadas a la categoría</b></td>";
+            //Si existen clientes mostramos un cliente por fila
+        } else {
+            foreach ($lineasPedido as $key => $value) {
+                $articulo= articulo::getArticulo($value->getCodigoArticulo());
+                echo "<tr>";
+                echo "<td>" . $articulo[0]->getDescripcion() . "</td>";
+                echo "<td>" . $value->getUnidades() . "</td>";
+                //Pintamos los enlaces para editar y borrar el cliente pasando como parámetro el dni
+                echo "<td><a class='btn btn-warning mr-1 pt-0' href='sucategoryForm.php?cod=" . $value->getLinea() . "'><img with='15px' src='img/edit.png'></a>";
+                if ($value->getActivo()) {
+                    echo "<a class='btn btn-danger mr-1 pt-0' href='subcategoryForm.php?cod=" . $value->getLinea() . "&accion=deactivate'><img with='15px' src='img/delete.png'></a>";
+                } else {
+                    echo "<a class='btn btn-success mr-1 pt-0' href='subcategoryForm.php?cod=" . $value->getLinea() . "&accion=activate'><img with='15px' src='img/anadir.png'></a>";
+                }
+                echo "<a class='btn btn-info pt-0' href='subcategoryForm.php?cod=" . $value->getLinea() . "'><img with='15px' src='img/info.png'></a></td>";
+                echo "</tr>";
+            }
+        }
+        echo "</table>";
+        echo '</div>';
+    } else {
+        echo "No se encontró el pedido";
+    }
+} else {
+    echo "Acceso denegado";
+}
+echo '</div>';
+?>
