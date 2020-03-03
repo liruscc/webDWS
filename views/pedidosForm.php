@@ -4,30 +4,136 @@ require_once ('classes/lineapedido.php');
 require_once ('classes/articulo.php');
 $error = false;
 $pedido = false;
+$accion = false;
 ?>
 
 <?php
-echo '<div class="col-lg-8 col-md-8 col-sm-8 row">';
-if ($_POST) {
-    //validar cliente y error o actualizar (llamar al controlador)
-    $errores = pedido::validarForm($_POST['dni'], $_POST['nombre'], $_POST['telefono'], $_POST['email'], $_POST['direccion'], $_POST['estado'], $_POST['tipo_pago'], $_POST['estado_pago'], $_POST['envio'], $_POST['activo']);
-    //Por cada error devuelto lo imprimos en la parte superior de la página
-    if ($errores) {
-        echo "<div id='errores' class='alert alert-danger p-1'>";
-        foreach ($errores as $key => $value) {
-            if ($value) {
-                echo $value . "<br/>";
+echo '<div class="col-lg-8 col-md-8 col-sm-8">';
+
+
+if (isset($_GET['accion'])) {
+    $accion = $_GET['accion'];
+}
+
+if (isset($_POST['accion'])) {
+    $accion = $_POST['accion'];
+}
+
+if (isset($_GET['id'])) {
+    $cod_pedido = $_GET['id'];
+}
+
+if (isset($_POST['id'])) {
+    $cod_pedido = $_POST['id'];
+}
+
+if (isset($_GET['linea'])) {
+    $num_linea = $_GET['linea'];
+}
+
+if (isset($_POST['linea'])) {
+    $num_linea = $_POST['linea'];
+}
+
+if(isset($_POST['cod_articulo']))$cod_articulo = $_POST['cod_articulo'];
+if(isset($_POST['unidades']))$unidades = $_POST['unidades'];
+switch ($accion) {
+    case 'update':
+        //validar cliente y error o actualizar (llamar al controlador)
+        $errores = pedido::validarForm($_POST['dni'], $_POST['nombre'], $_POST['telefono'], $_POST['email'], $_POST['direccion'], $_POST['estado'], $_POST['tipo_pago'], $_POST['estado_pago'], $_POST['envio'], $_POST['activo']);
+        //Por cada error devuelto lo imprimos en la parte superior de la página
+        if ($errores) {
+            echo "<div id='errores' class='alert alert-danger p-1'>";
+            foreach ($errores as $key => $value) {
+                if ($value) {
+                    echo $value . "<br/>";
+                }
+            }
+            echo "</div>";
+        } else {
+            if (pedido::updatePedido($_GET['id'], $_POST['dni'], $_POST['nombre'], $_POST['telefono'], $_POST['email'], $_POST['direccion'], $_POST['estado'], $_POST['tipo_pago'], $_POST['estado_pago'], $_POST['envio'], $_POST['activo'])) {
+                mensaje('Los datos del pedido se actualizaron correctamente.');
+            } else {
+                error('No se pudo actualizar el pedido.');
             }
         }
-        echo "</div>";
-    } else {
-        if (pedido::updatePedido($_GET['id'], $_POST['dni'], $_POST['nombre'], $_POST['telefono'], $_POST['email'], $_POST['direccion'], $_POST['estado'], $_POST['tipo_pago'], $_POST['estado_pago'], $_POST['envio'],$_POST['activo'])) {
-            mensaje('El pedido se actualizó correctamente.');
+        break;
+
+    case 'add':
+        $linea = lineapedido::getLineaPedido($cod_pedido, $num_linea);
+        $errores = lineapedido::validarLinea($linea->getLinea(), $linea->getCodigoPedido(), $linea->getCodigoArticulo(), $linea->getUnidades() + 1, $linea->getActivo());
+        //Por cada error devuelto lo imprimos en la parte superior de la página
+        if ($errores) {
+            echo "<div id='errores' class='alert alert-danger p-1'>";
+            foreach ($errores as $key => $value) {
+                if ($value) {
+                    echo $value . "<br/>";
+                }
+            }
+            echo "</div>";
         } else {
-            error('No se pudo actualizar el pedido.');
+            if (lineapedido::updateLineaPedido($linea->getLinea(), $linea->getCodigoPedido(), $linea->getCodigoArticulo(), $linea->getUnidades() + 1, $linea->getActivo())) {
+                mensaje('Se actualizó la línea correctamente.');
+            } else {
+                error('No se pudo actualizar la línea.');
+            }
         }
-    }
+        break;
+
+    case 'sub':
+        $linea = lineapedido::getLineaPedido($cod_pedido, $num_linea);
+        $errores = lineapedido::validarLinea($linea->getLinea(), $linea->getCodigoPedido(), $linea->getCodigoArticulo(), $linea->getUnidades() - 1, $linea->getActivo());
+        //Por cada error devuelto lo imprimos en la parte superior de la página
+        if ($errores) {
+            echo "<div id='errores' class='alert alert-danger p-1'>";
+            foreach ($errores as $key => $value) {
+                if ($value) {
+                    echo $value . "<br/>";
+                }
+            }
+            echo "</div>";
+        } else {
+            if (lineapedido::updateLineaPedido($linea->getLinea(), $linea->getCodigoPedido(), $linea->getCodigoArticulo(), $linea->getUnidades() - 1, $linea->getActivo())) {
+                mensaje('Se actualizó la línea correctamente.');
+            } else {
+                error('No se pudo actualizar la línea.');
+            }
+        }
+
+        break;
+    case 'delete':
+        $lineaBorrada = lineapedido::borrarLinea($cod_pedido, $num_linea);
+        //Por cada error devuelto lo imprimos en la parte superior de la página
+        if (!$lineaBorrada) {
+            error('No se pudo eliminar la línea');
+        } else {
+            mensaje('Se eliminó la línea.');
+        }
+        break;
+
+    case 'addArticulo':
+        $num_linea = lineapedido::getLastLinea($cod_pedido);
+        $activo = '1';
+        $errores = lineapedido::validarLinea($num_linea, $cod_pedido, $cod_articulo, $unidades, $activo);
+        if ($errores) {
+            echo "<div id='errores' class='alert alert-danger p-1'>";
+            foreach ($errores as $key => $value) {
+                if ($value) {
+                    echo $value . "<br/>";
+                }
+            }
+            echo "</div>";
+        } else {
+            echo "codigo pedido ".$cod_pedido;
+            if (lineapedido::addLastLinea($cod_pedido, $cod_articulo, $unidades, '1')) {
+                mensaje('Se añadió el artículo correctamente.');
+            } else {
+                error('No se pudo añadir el artículo.');
+            }
+        }
+        break;
 }
+
 
 if (isset($_SESSION['tipo'])) {
     if ($_SESSION['tipo'] == 'navegante' || $_SESSION['tipo'] == 'registrado') {
@@ -50,7 +156,7 @@ if (isset($_SESSION['tipo'])) {
             $pedido = pedido::getPedido($edit);
         }
     }
-
+    echo '<div class="col-lg-12 col-md-12 col-sm-12 row">';
     $action = 'index.php?menu=pedidosForm&id=' . $edit;
     if ($pedido) {
         echo '<div class="col-lg-6 col-md-6 col-sm-6">';
@@ -100,7 +206,8 @@ if (isset($_SESSION['tipo'])) {
             <div class="form-group">
                 <label for="activo">Activo:</label><br/>
                 <input class="form-control" type="text" id="activo" name="activo" size="30" maxlength="30" value="<?php echo $pedido->getActivo(); ?>"/>
-            </div>  
+            </div>
+            <input type="hidden" class='form-control' name="accion" id="accion" value ="update"/>
         </fieldset>
         <br/>
         <input class="btn btn-success" type="submit" name="confirmar" value="Guardar"/>
@@ -114,26 +221,44 @@ if (isset($_SESSION['tipo'])) {
         echo "<tr class='table-info'><td>Artículo</td><td>Unidades</td><td class='w-50'></td></tr>";
         //Si no hay ningún cliente lo mostramos en la tabla
         if (!$lineasPedido) {
-            echo "<td colspan='4'><b>No existen subcategorías asociadas a la categoría</b></td>";
+            echo "<td colspan='4'><b>No existen artículos asociados al pedido</b></td>";
             //Si existen clientes mostramos un cliente por fila
         } else {
             foreach ($lineasPedido as $key => $value) {
-                $articulo= articulo::getArticulo($value->getCodigoArticulo());
+                $articulo = articulo::getArticulo($value->getCodigoArticulo());
                 echo "<tr>";
                 echo "<td>" . $articulo[0]->getDescripcion() . "</td>";
                 echo "<td>" . $value->getUnidades() . "</td>";
                 //Pintamos los enlaces para editar y borrar el cliente pasando como parámetro el dni
-                echo "<td><a class='btn btn-warning mr-1 pt-0' href='sucategoryForm.php?cod=" . $value->getLinea() . "'><img with='15px' src='img/edit.png'></a>";
-                if ($value->getActivo()) {
-                    echo "<a class='btn btn-danger mr-1 pt-0' href='subcategoryForm.php?cod=" . $value->getLinea() . "&accion=deactivate'><img with='15px' src='img/delete.png'></a>";
-                } else {
-                    echo "<a class='btn btn-success mr-1 pt-0' href='subcategoryForm.php?cod=" . $value->getLinea() . "&accion=activate'><img with='15px' src='img/anadir.png'></a>";
-                }
-                echo "<a class='btn btn-info pt-0' href='subcategoryForm.php?cod=" . $value->getLinea() . "'><img with='15px' src='img/info.png'></a></td>";
+                echo "<td><a class='btn btn-success mr-1 pt-0' href='index.php?accion=add&menu=pedidosForm&id=" . $value->getCodigoPedido() . "&linea=" . $value->getLinea() . "'>+</a>";
+                echo "<a class='btn btn-warning mr-1 pt-0' href='index.php?accion=sub&menu=pedidosForm&id=" . $value->getCodigoPedido() . "&linea=" . $value->getLinea() . "'>-</a>";
+                echo "<a class='btn btn-danger mr-1 pt-0' href='index.php?accion=delete&menu=pedidosForm&id=" . $value->getCodigoPedido() . "&linea=" . $value->getLinea() . "'><img with='15px' src='img/delete.png'></a>";
+                echo "</td>";
                 echo "</tr>";
             }
         }
         echo "</table>";
+
+        echo '<form id="linea" class="m-4 mt-5" method="post" action="' . $action . '">';
+        ?>
+
+        <fieldset>
+            <legend><em>Añadir artículo</em></legend>
+            <div class="form-group">
+                <label for="fecha">Artículo:</label><br/>
+                <input class="form-control" type="text" id="cod_articulo" name="cod_articulo" size="10" maxlength="9" value =""/>
+            </div>
+            <div class="form-group">
+                <label for="dni">Unidades:</label><br/>
+                <input class="form-control" type="text" id="unidades" name="unidades" size="10" maxlength="9" value =""/>
+            </div>
+        </fieldset>
+        <input type="hidden" class='form-control' name="accion" id="accion" value ="addArticulo"/>
+        <input class="btn btn-success" type="submit" name="add" value="Añadir"/>
+        </form>
+
+
+        <?php
         echo '</div>';
     } else {
         echo "No se encontró el pedido";
@@ -141,5 +266,6 @@ if (isset($_SESSION['tipo'])) {
 } else {
     echo "Acceso denegado";
 }
+echo '</div>';
 echo '</div>';
 ?>
