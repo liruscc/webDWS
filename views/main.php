@@ -65,7 +65,12 @@ if ($_POST) {
 					<div class="botonwrapper text-center row justify-content-center">';
                 if (isset($_SESSION['tipo'])) {
                     if ($_SESSION['tipo'] == 'navegante' || $_SESSION['tipo'] == 'registrado') {
-                        echo '<div><a class="btn btn-success" href="compra.php?ref=' . $value->getCodigo() . '&pre=' . $value->getPrecio() . '&cat=' . $cat . '&subcat=' . $subcat . '">Comprar</a></div>';
+                        if($value->getActivo()=='1'){
+                            echo '<div><a class="btn btn-success" href="compra.php?ref=' . $value->getCodigo() . '&pre=' . $value->getPrecio() . '&cat=' . $cat . '&subcat=' . $subcat . '">Comprar</a></div>';
+                        }else{
+                            echo '<div><a class="btn btn-light">No disponible</a></div>';
+                        }
+                        
                     }
                     if ($_SESSION['tipo'] == 'superusuario' || $_SESSION['tipo'] == 'empleado') {
                         echo '<a class="btn btn-warning pt-0" href="articulosForm.php?accion=update&ref=' . $value->getCodigo() . '"><img width="15px" src="img/edit.png"></a>';
@@ -78,7 +83,11 @@ if ($_POST) {
                         
                     }
                 } else {
-                    echo '<div><a class="btn btn-success" href="compra.php?ref=' . $value->getCodigo() . '&pre=' . $value->getPrecio() . '&cat=' . $cat . '&subcat=' . $subcat . '">Comprar</a></div>';
+                    if($value->getActivo()=='1'){
+                            echo '<div><a class="btn btn-success" href="compra.php?ref=' . $value->getCodigo() . '&pre=' . $value->getPrecio() . '&cat=' . $cat . '&subcat=' . $subcat . '">Comprar</a></div>';
+                        }else{
+                            echo '<div><a class="btn btn-light">No disponible</a></div>';
+                        }
                 }
                 echo '</div>
 				</div>';
