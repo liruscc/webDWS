@@ -30,6 +30,21 @@ $referencia = false;
                         $accion ='update';
                     }
                 }
+            }elseif($_GET['accion']=='deactivate'){
+                $articulos = articulo::getArticulo($_GET['ref']);
+                $articulo = $articulos[0];
+                $articulo->setActivo('0');
+                $articulo->updateArticulo();
+                $accion = 'Desactivar';
+                mensaje('El producto ha sido desactivado.');
+                
+            }elseif($_GET['accion']=='activate'){
+                $articulos = articulo::getArticulo($_GET['ref']);
+                $articulo = $articulos[0];
+                $articulo->setActivo('1');
+                $articulo->updateArticulo();
+                $accion = 'Activar';
+                mensaje('El producto ha sido activado.');
             }
             
             //Control de los valores enviados en el form

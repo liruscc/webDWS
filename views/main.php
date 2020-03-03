@@ -69,7 +69,13 @@ if ($_POST) {
                     }
                     if ($_SESSION['tipo'] == 'superusuario' || $_SESSION['tipo'] == 'empleado') {
                         echo '<a class="btn btn-warning pt-0" href="articulosForm.php?accion=update&ref=' . $value->getCodigo() . '"><img width="15px" src="img/edit.png"></a>';
-                        echo '<a class="btn btn-danger pt-0" href="productactions.php?ref=' . $value->getCodigo() . '&act=delete"><img width="15px" src="img/delete.png"></a></td>';
+                        
+                        if($value->getActivo()== '0'){
+                            echo '<a class="btn btn-success pt-0" href="articulosForm.php?accion=activate&ref=' . $value->getCodigo() . '"><img width="15px" src="img/anadir.png"></a></td>';
+                        }else{
+                            echo '<a class="btn btn-danger pt-0" href="articulosForm.php?accion=deactivate&ref=' . $value->getCodigo() . '"><img width="15px" src="img/delete.png"></a></td>';
+                        }
+                        
                     }
                 } else {
                     echo '<div><a class="btn btn-success" href="compra.php?ref=' . $value->getCodigo() . '&pre=' . $value->getPrecio() . '&cat=' . $cat . '&subcat=' . $subcat . '">Comprar</a></div>';

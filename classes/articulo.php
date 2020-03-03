@@ -209,10 +209,10 @@ class articulo {
             $errores[] = "El precio es obligatorio, debe tener precisión de dos decimales y soporta un máximo de 10 carácteres.";
         }
         if (!self::validarPromocion($this->promocion)) {
-            $errores[] = "El valor para la promoción no es válido.";
+            $errores[] = "El valor para la promoción no es válido. Debe ser '0 o '1'";
         }
         if (!self::validarActivo($this->activo)) {
-            $errores[] = "El valor para el activo no es válido.";
+            $errores[] = "El valor para el activo no es válido. Debe ser '0 o '1'";
         }
         return count($errores) > 0 ? $errores : false;
     }
