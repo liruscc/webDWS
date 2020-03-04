@@ -124,7 +124,6 @@ switch ($accion) {
             }
             echo "</div>";
         } else {
-            echo "codigo pedido ".$cod_pedido;
             if (lineapedido::addLastLinea($cod_pedido, $cod_articulo, $unidades, '1')) {
                 mensaje('Se añadió el artículo correctamente.');
             } else {

@@ -105,7 +105,9 @@ if (isset($_SESSION['tipo'])) {
         <?php
         echo '</form>';
         echo "</div>";
-         echo '<div class="col-lg-6 col-md-6 col-sm-6 mt-5">';
+        
+        if($_SESSION['tipo'] == 'superusuario' || $_SESSION['tipo'] == 'empleado'){
+        echo '<div class="col-lg-6 col-md-6 col-sm-6 mt-5">';
         echo "<div>";
         if ($usuario->getActivo()) {
             echo "Desactivar cliente <a class='btn btn-danger mr-1 pt-0' href='index.php?menu=clientesForm&id=" . $usuario->getDni() . "&accion=deactivate'><img with='15px' src='img/delete.png'></a>";
@@ -114,9 +116,8 @@ if (isset($_SESSION['tipo'])) {
         }
         echo "</div>";
         echo '</div>';
+        }
         
-        
-       
     } else {
         echo "No se encontró el usuario";
     }
