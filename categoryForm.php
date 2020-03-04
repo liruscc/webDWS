@@ -158,7 +158,6 @@ $referencia = false;
                     echo "</div>";
                     break;
             }
-            print_r($categoria);
             ?>
 
             <div class="col-lg-8 col-md-8 col-sm-8 row">
@@ -195,7 +194,7 @@ $referencia = false;
                     ?>
                     <input type="hidden" class='form-control' name="activo" id="activo" value="<?php echo $categoria->getActivo(); ?>"/><br/>
                     <input type="hidden" class='form-control' name="cod" id="cod" value ="<?php echo $categoria->getCodigo(); ?>"/><br/>
-                    <input type="hidden" class='form-control' name="accion" id="accion" value ="<?php echo $accion ?>"/><br/>
+                    <input type="hidden" class='form-control' name="accion" id="accion" value ="update"/><br/>
 
                     <br/>
                     <input class="btn btn-success" type="submit" name="guardar" value="Guardar"/>
