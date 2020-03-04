@@ -368,10 +368,10 @@ class cliente {
     }
 
     //Método estático para editar un cliente con los valores de un formulario
-    public static function updateClient($dni, $nombre, $direccion, $localidad, $provincia, $telefono, $email) {
+    public static function updateClient($dni, $nombre, $direccion, $localidad, $provincia, $telefono, $email, $activo='1') {
         $bbdd = connectBBDD();
-        $query = "UPDATE clientes SET nombre=:nombre,direccion=:direccion,localidad=:localidad,provincia=:provincia,telefono=:telefono,email=:email WHERE dni=:dni";
-        $parametros = array(':nombre' => $nombre, ':direccion' => $direccion, ':localidad' => $localidad, ':provincia' => $provincia, ':telefono' => $telefono, ':email' => $email, ':dni' => $dni);
+        $query = "UPDATE clientes SET nombre=:nombre,direccion=:direccion,localidad=:localidad,provincia=:provincia,telefono=:telefono,email=:email,activo=:activo WHERE dni=:dni";
+        $parametros = array(':nombre' => $nombre, ':direccion' => $direccion, ':localidad' => $localidad, ':provincia' => $provincia, ':telefono' => $telefono, ':email' => $email, ':dni' => $dni, ':activo' => $activo);
         $cliente = executeUpdate($bbdd, $query, $parametros);
         //Validamos que devuelve el resultado correcto
         return $cliente == 1 ? true : false;

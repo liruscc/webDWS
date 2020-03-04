@@ -32,7 +32,11 @@ if (isset($_SESSION['tipo'])) {
                 //Pintamos los enlaces para editar y borrar el cliente pasando como parámetro el dni
                 echo "<td>";
                 echo botonEditar("index.php?menu=clientesForm&id=" . $datos[$i]->getDni());
-                echo botonDesactivar("index.php?menu=clientesForm&id=" . $datos[$i]->getDni());
+                if($datos[$i]->getActivo()=='1'){
+                    echo botonDesactivar("index.php?menu=clientesForm&accion=deactivate&id=" . $datos[$i]->getDni());
+                }else{
+                    echo botonActivar("index.php?menu=clientesForm&accion=activate&id=" . $datos[$i]->getDni());
+                }        
                 echo botonInfo("index.php?menu=clientesForm&id=" . $datos[$i]->getDni());
                 echo "</td>";
                 echo "</tr>";
