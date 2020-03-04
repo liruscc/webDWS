@@ -44,7 +44,6 @@ if (isset($_SESSION['tipo'])) {
             $usuario = cliente::getClient($edit);
         }
     }
-
     
     if($accion=='deactivate'){
         $usuario->setActivo('0');
@@ -101,7 +100,7 @@ if (isset($_SESSION['tipo'])) {
         </fieldset>
         <br/>
         <input class="btn btn-success" type="submit" name="confirmar" value="Guardar"/>
-        <input class="btn btn-danger" type="button" name="cancelar" value="Cancelar" onclick="location.href = 'index.php'"/>
+        <input class="btn btn-danger" type="button" name="cancelar" value="Cancelar" onclick="location.href = 'index.php?menu=clientes<?php if($usuario->getTipo()=='empleado') echo '&empleados'?>'"/>
         </form>
         <?php
         echo '</form>';
