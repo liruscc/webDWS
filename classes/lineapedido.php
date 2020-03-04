@@ -103,7 +103,6 @@ class lineapedido {
     
     public static function addLastLinea($cod_pedido, $cod_articulo, $unidades, $activo) {
         $num_linea=(int)self::getLastLinea($cod_pedido);
-        echo "getLast linea ".$num_linea;
         $num_linea= $num_linea+1;
         $bbdd = connectBBDD();
        $query = 'INSERT INTO linea_pedido VALUES (:num_linea,:cod_pedido,:cod_articulo,:unidades,:activo)';

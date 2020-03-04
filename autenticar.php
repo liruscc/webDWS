@@ -12,19 +12,18 @@ if ($_POST) {
     if (!$errores) {
         $usuario = Cliente::verificarPassword($_POST['usuario'], $_POST['password']);
         // si el id del objeto retornado no es null, quiere decir que encontro un registro en la base
-        if ($usuario->getActivo() == '1') {
-
-            if ($usuario) {
+        if ($usuario) {
+            if ($usuario->getActivo() == '1') {
                 $_SESSION['id'] = $usuario->getDni();
                 $_SESSION['tipo'] = $usuario->getTipo();
                 header('Location: index.php?correcto');
             } else {
                 session_destroy();
-                header('Location: index.php?error=El usuario o parssword no son correctos.'); // cuando los datos son incorrectos envia a la página de error
+                header('Location: index.php?error=El usuario está bloqueado.'); // cuando los datos son incorrectos envia a la página de error
             }
         } else {
             session_destroy();
-            header('Location: index.php?error=El usuario está bloqueado.'); // cuando los datos son incorrectos envia a la página de error
+            header('Location: index.php?error=El usuario o parssword no son correctos.'); // cuando los datos son incorrectos envia a la página de error
         }
     } else {
         session_destroy();
