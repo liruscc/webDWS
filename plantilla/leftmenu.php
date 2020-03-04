@@ -14,7 +14,9 @@
 					if($subcategorias){
 						echo '<ul class="submenu">';
 						foreach ($subcategorias as $subcategoria => $value){
-							echo '<li class="nav-item"><a class="nav-link" href="index.php?subcat='.$value->getCodigo().'	">'.$value.'</a></li>';
+                                                    if($value->getActivo()=='1'){
+                                                        echo '<li class="nav-item"><a class="nav-link" href="index.php?subcat='.$value->getCodigo().'	">'.$value.'</a></li>';
+                                                    }
 						}
 						echo '</ul>';
 					}

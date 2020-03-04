@@ -1,6 +1,8 @@
 <?php
+require_once ('views/helpers.php');
 require_once ('plantilla/header.php');
 require_once ('plantilla/nav.php');
+$referencia = false;
 ?>
 
 <div id="container" class="d-flex flex-row col-lg-12 col-md-12 col-sm-12 justify-content-center">
@@ -16,23 +18,29 @@ require_once ('plantilla/nav.php');
 
             if (isset($_GET["accion"])) {
                 $accion = $_GET["accion"];
-                if($accion=='add'){
-                    $name='Añadir';
-                }elseif($accion=='update' || $accion=='activate' || $accion=='deactivate'){
-                    $name='Actualizar';
+                if ($accion == 'add') {
+                    $name = 'Añadir';
+                } elseif ($accion == 'update' || $accion == 'activate' || $accion == 'deactivate' || $accion == 'associate' || $accion == 'deactivatesub' || $accion == 'activatesub') {
+                    $name = 'Actualizar';
+                } else {
+                    $name = 'Editar';
                 }
             }
 
-            if ($_POST) {
-                if (isset($_POST["accion"])) {
-                    $accion = $_POST["accion"];
-                }
-
-                if (isset($_POST["cod"])) {
-                    $referencia = $_POST["cod"];
-                }
+            if (isset($_GET["cod"])) {
+                $referencia = $_GET["cod"];
             }
-  
+
+            if (isset($_POST["cod"])) {
+                $referencia = $_POST["cod"];
+            }
+
+
+            if (isset($_POST["accion"])) {
+                $accion = $_POST["accion"];
+            }
+
+
             switch ($accion) {
                 case 'add':
                     if ($_POST) {
@@ -46,11 +54,11 @@ require_once ('plantilla/nav.php');
                             echo "</div>";
                         } else {
                             $nuevaCategoria = $categoria->addCategoria();
-                            if(!$nuevaCategoria){
+                            if (!$nuevaCategoria) {
                                 echo "<div id='errores' class='alert alert-danger p-1 w-100'>";
                                 echo "Se ha producido un error al crear la categoría.";
                                 echo "</div>";
-                            }else{
+                            } else {
                                 $categoria = categoria::getCategoria($nuevaCategoria);
                                 echo "<div id='errores' class='alert alert-success p-1 w-100'>";
                                 echo "Se ha creado la categoría.";
@@ -63,7 +71,7 @@ require_once ('plantilla/nav.php');
                     break;
                 case 'update':
                     if ($_POST) {
-                        $categoria = new categoria($_POST['nombre'], $_POST['activo'],$_POST['codigo']);
+                        $categoria = new categoria($_POST['nombre'], $_POST['activo'], $_POST['codigo']);
                         $errores = $categoria->validarNuevaCategoria();
                         if ($errores) {
                             echo "<div id='errores' class='alert alert-danger p-1 w-100'>";
@@ -73,12 +81,12 @@ require_once ('plantilla/nav.php');
                             echo "</div>";
                         } else {
                             $categoriaActualizada = $categoria->updateCategoria();
-                            if(!$categoriaActualizada){
+                            if (!$categoriaActualizada) {
                                 $categoria = categoria::getCategoria($categoria->getCodigo());
                                 echo "<div id='errores' class='alert alert-success p-1 w-100'>";
                                 echo "Se producido un error al actualizar la categoría.";
                                 echo "</div>";
-                            }else{
+                            } else {
                                 echo "<div id='errores' class='alert alert-success p-1 w-100'>";
                                 echo "Se ha actualizado la categoría.";
                                 echo "</div>";
@@ -86,43 +94,89 @@ require_once ('plantilla/nav.php');
                         }
                     } else {
                         $categoria = categoria::getCategoria($_GET['cod'], false);
-                        $categoria = $categoria;
                     }
                     break;
                 case 'activate':
                     $categoria = categoria::getCategoria($_GET['cod'], false);
-                    $categoria->cambiarEstado("1");
-                    $categoria = categoria::getCategoria($_GET['cod'], false);
+                    if ($categoria->cambiarEstado("1")) {
+                        $categoria = categoria::getCategoria($_GET['cod'], false);
+                        mensaje('La categoría se activó correctamente.');
+                    } else {
+                        error('Se produjo un error al activar la categoría.');
+                    }
                     break;
                 case 'deactivate':
                     $categoria = categoria::getCategoria($_GET['cod'], false);
-                    $categoria->cambiarEstado("0");
-                    $categoria = categoria::getCategoria($_GET['cod'], false);
+                    if ($categoria->cambiarEstado("0")) {
+                        $categoria = categoria::getCategoria($_GET['cod'], false);
+                        mensaje('La categoria se desactivó correctamente.');
+                    } else {
+                        error('Se produjo un error al desactivar la categoría.');
+                    }
+
                     break;
+
+                case 'associate':
+                    $categoria = categoria::getCategoria($_GET['cod'], false);
+                    if (subcategoria::getSubCategoria(isset($_POST['subid']))) {
+                        $subcategoria = subcategoria::getSubCategoria($_POST['subid']);
+                        $subcategoria->setFamilia($referencia);
+                        $subcategoria->setActivo('1');
+
+                        if ($subcategoria->addSubCategoria()) {
+                            mensaje('La subcategoria se ascoció correctamente.');
+                        } else {
+                            error('Se produjo un error al asociar la subcategoría.');
+                        }
+                    }
+                    break;
+                 
+                case 'activatesub':
+                    $categoria = categoria::getCategoria($_GET['cod'], false);
+                    $subcategoria = subcategoria::getSubcategoria($_GET['subcod'], false);
+                    if ($subcategoria->cambiarEstado("1")) {
+                        $subcategoria = subcategoria::getSubCategoria($_GET['subcod'], false);
+                        mensaje('La subcategoría se activó correctamente.');
+                    } else {
+                        error('Se produjo un error al activar la subcategoría.');
+                    }
+                    break;
+                case 'deactivatesub':
+                    $categoria = categoria::getCategoria($_GET['cod'], false);
+                    $subcategoria = subcategoria::getSubCategoria($_GET['subcod'], false);
+                    if ($subcategoria->cambiarEstado("0")) {
+                        $subcategoria = subcategoria::getSubCategoria($_GET['subcod'], false);
+                        mensaje('La subcategoria se desactivó correctamente.');
+                    } else {
+                        error('Se produjo un error al desactivar la subcategoría.');
+                    }
+                    break;
+                    
                 default:
                     echo "<div id='errores' class='alert alert-danger p-1 w-100'>";
                     echo "Se produjo un error al realizar la acción.";
                     echo "</div>";
                     break;
             }
+            print_r($categoria);
             ?>
 
             <div class="col-lg-8 col-md-8 col-sm-8 row">
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb bg-light py-1">
                         <li class="breadcrumb-item"><a href="categoriesdata.php">Categorías</a></li>
-                        <li class="breadcrumb-item active" aria-current="page"><?php echo $name.' categoría'?></li>
+                        <li class="breadcrumb-item active" aria-current="page"><?php echo $name . ' categoría' ?></li>
                     </ol>
                 </nav>
             </div>
             <div class="col-lg-5 col-md-5 col-sm-5">
-                <form id="producto" class='m-4' method="post" action="categoryForm.php?accion=<?php echo $accion?>">
-                    <?php if($accion=='update'){?>
-                    <div class="form-group">	
-                        <label for="codigo">Código:</label>
-                        <input type="text" class='form-control' name="codigo" id="codigo" value="<?php echo $categoria->getCodigo(); ?>" size="40" readonly="readonly"/><br/>
-                    </div>
-                    <?php }?>
+                <form id="producto" class='m-4' method="post" action="categoryForm.php?accion=<?php echo $accion ?>&cod=<?php echo $referencia; ?>"/>
+                    <?php if ($accion == 'update') { ?>
+                        <div class="form-group">	
+                            <label for="codigo">Código:</label>
+                            <input type="text" class='form-control' name="codigo" id="codigo" value="<?php echo $categoria->getCodigo(); ?>" size="40" readonly="readonly"/><br/>
+                        </div>
+                    <?php } ?>
                     <div class="form-group">	
                         <label for="nombre">Nombre:</label>
                         <input type="text" class='form-control' name="nombre" id="descripcion" value="<?php echo $categoria->getNombre(); ?>" size="40"/><br/>
@@ -164,18 +218,38 @@ require_once ('plantilla/nav.php');
                         echo "<td>" . $value->getNombre() . "</td>";
                         echo "<td>" . $value->getActivo() . "</td>";
                         //Pintamos los enlaces para editar y borrar el cliente pasando como parámetro el dni
-                        echo "<td><a class='btn btn-warning mr-1 pt-0' href='sucategoryForm.php?cod=" . $value->getCodigo() . "'><img with='15px' src='img/edit.png'></a>";
+                        echo "<td><a class='btn btn-warning mr-1 pt-0' href='subcategoryForm.php?cod=".$referencia."&subcod=" . $value->getCodigo() . "'><img with='15px' src='img/edit.png'></a>";
                         if ($value->getActivo()) {
-                            echo "<a class='btn btn-danger mr-1 pt-0' href='subcategoryForm.php?cod=" . $value->getCodigo() . "&accion=deactivate'><img with='15px' src='img/delete.png'></a>";
+                            echo "<a class='btn btn-danger mr-1 pt-0' href='categoryForm.php?cod=".$referencia."&subcod=" . $value->getCodigo() . "&accion=deactivatesub'><img with='15px' src='img/delete.png'></a>";
                         } else {
-                            echo "<a class='btn btn-success mr-1 pt-0' href='subcategoryForm.php?cod=" . $value->getCodigo() . "&accion=activate'><img with='15px' src='img/anadir.png'></a>";
+                            echo "<a class='btn btn-success mr-1 pt-0' href='categoryForm.php?cod=".$referencia."&subcod=" . $value->getCodigo() . "&accion=activatesub'><img with='15px' src='img/anadir.png'></a>";
                         }
-                        echo "<a class='btn btn-info pt-0' href='subcategoryForm.php?cod=" . $value->getCodigo() . "'><img with='15px' src='img/info.png'></a></td>";
+                        echo "<a class='btn btn-info pt-0' href='subcategoryForm.php?cod=".$referencia."&subcod=" . $value->getCodigo() . "'><img with='15px' src='img/info.png'></a></td>";
                         echo "</tr>";
                     }
                 }
                 echo "</table>";
+
+                echo '<form id="linea" class="m-4 mt-5" method="post" action="categoryForm.php?accion=associate&cod=' . $referencia . '">';
                 ?>
+
+                <fieldset>
+                    <legend><em>Asociar subcategoría</em></legend>
+                    <div class="form-group">
+                        <?php
+                        $subcategorias = subcategoria::getAll();
+                        echo '<select name="subid">';
+                        foreach ($subcategorias as $sub) {
+                            echo '<option value="' . $sub->getCodigo() . '">' . $sub->getNombre() . '</option>';
+                        }
+                        echo '</select>';
+                        ?>
+                    </div>
+                </fieldset>
+                <input type="hidden" class='form-control' name="accion" id="accion" value ="associate"/>
+                <input class="btn btn-success" type="submit" name="associate" value="Asociar subcategoría"/>
+                </form>
+
             </div>
             <?php
         } else {

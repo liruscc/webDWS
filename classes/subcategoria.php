@@ -62,7 +62,7 @@ class subcategoria {
         $this->familia = $familia;
     }
 
-    public function setDescripcion($activo) {
+    public function setActivo($activo) {
         $this->activo = $activo;
     }
 
@@ -70,12 +70,19 @@ class subcategoria {
     public function __toString() {
         return $this->getNombre();
     }
+    
+    public static function getAll() {
+        $bbdd = connectBBDD();
+        $query = 'SELECT * FROM subfamilias';
+        $articulo = executeQuery($bbdd, 'subcategoria', $query);
+        return (count($articulo) > 0) ? $articulo : false;
+    }
 
     public static function getSubCategoria($id) {
         $bbdd = connectBBDD();
         $query = 'SELECT * FROM subfamilias WHERE cod_subfamilia=:cod_subfamilia';
-        $articulo = executeQuery($bbdd, 'categoria', $query, array(':cod_subfamilia' => $id));
-        return (count($articulo) > 0) ? $articulo : false;
+        $articulo = executeQuery($bbdd, 'subcategoria', $query, array(':cod_subfamilia' => $id));
+        return (count($articulo) > 0) ? $articulo[0] : false;
     } 
 
     public static function getSubcategorias($categoria) {
@@ -107,11 +114,11 @@ class subcategoria {
 
     public function addSubCategoria() {
         $bbdd = connectBBDD();
-        $query = "INSERT INTO subfamilias (cod_familia, nombre, activo) VALUES (:cod_familia, :nombre, :activo)";
-        $parametros = array(':cod_familia' => $this->cod_familia, ':nombre' => $this->nombre, ':activo' => $this->activo);
-        $articulo = executeQuery($bbdd, $query, 'subcategoria', $parametros);
+        $query = "INSERT INTO subfamilias (familia, nombre, activo) VALUES (:familia, :nombre, :activo)";
+        $parametros = array(':familia' => $this->familia, ':nombre' => $this->nombre, ':activo' => $this->activo);
+        $articulo = executeUpdate($bbdd, $query, $parametros);
         //Validamos que devuelve el resultado correcto
-        return $articulo === 1 ? true : false;
+        return $articulo == 1 ? true : false;
     }
     //!hacerlo recursivo para las sub que cuelgan, y llamar  las sub que llaman a los artículos
     public function cambiarEstado($estado) {
@@ -120,7 +127,7 @@ class subcategoria {
         $parametros = array(':cod_subfamilia' => $this->cod_subfamilia, ':activo' => $estado);
         $articulo = executeUpdate($bbdd, $query, $parametros);
         //Validamos que devuelve el resultado correcto
-        return $articulo === 1 ? true : false;
+        return $articulo == 1 ? true : false;
     }
 
 }
